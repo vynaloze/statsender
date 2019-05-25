@@ -28,3 +28,23 @@
 [prune]
   go-tests = true
   unused-packages = true
+
+[[constraint]]
+  name = "go.uber.org/zap"
+  version = "1.10.0"
+
+[[constraint]]
+  name = "github.com/shirou/gopsutil"
+  version = "2.19.4"
+
+[[constraint]]
+  name = "github.com/vynaloze/pgstats"
+  version = "2.0.0"
+
+[[constraint]]
+  name = "github.com/robfig/cron"
+  version = "1.1.0"
+
+[[constraint]]
+  branch = "master"
+  name = "github.com/hashicorp/hcl2"
