@@ -37,7 +37,7 @@ func main() {
 	}
 
 	// Start cron jobs and wait forever
-	startCrons(datasources, c.System.toInterface(), c.Postgres.toInterface(), []sender.Sender{sender.Sout{}}) //fixme
+	startCrons(datasources, c.System.toInterface(), c.Postgres.toInterface(), c.sendersToInterface())
 	select {}
 }
 
@@ -76,7 +76,7 @@ func systemJob(systemCollector collector.SystemCollector, targets []sender.Sende
 		payload := systemCollector.Collect()
 
 		for _, target := range targets {
-			target.Send(payload)
+			go target.Send(payload)
 		}
 	}
 }
@@ -86,7 +86,7 @@ func postgresJob(datasource collector.Datasource, postgresCollector collector.Po
 		payload := postgresCollector.Collect(datasource)
 
 		for _, target := range targets {
-			target.Send(payload)
+			go target.Send(payload)
 		}
 	}
 }

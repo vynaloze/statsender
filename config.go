@@ -7,16 +7,18 @@ import (
 	"github.com/pkg/errors"
 	"github.com/vynaloze/statsender/collector"
 	"github.com/vynaloze/statsender/logger"
+	"github.com/vynaloze/statsender/sender"
 	"os"
 	"path/filepath"
 )
 
 type config struct {
-	Debug       *bool        `hcl:"debug"`
-	Datasources []datasource `hcl:"datasource,block"`
-	System      system       `hcl:"system,block"`
-	Postgres    postgres     `hcl:"postgres,block"`
-	// todo targets
+	Debug       *bool         `hcl:"debug"`
+	Datasources []datasource  `hcl:"datasource,block"`
+	System      system        `hcl:"system,block"`
+	Postgres    postgres      `hcl:"postgres,block"`
+	Sout        *sender.Sout  `hcl:"console,block"`
+	Http        []sender.Http `hcl:"http,block"`
 }
 
 type datasource struct {
@@ -124,4 +126,15 @@ func (p *postgres) toInterface() []collector.PostgresCollector {
 	return []collector.PostgresCollector{
 		p.PgStatUserIndexes,
 	}
+}
+
+func (c *config) sendersToInterface() []sender.Sender {
+	var s []sender.Sender
+	if c.Sout != nil {
+		s = append(s, c.Sout)
+	}
+	for _, h := range c.Http {
+		s = append(s, h)
+	}
+	return s
 }
