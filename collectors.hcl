@@ -16,7 +16,7 @@ system {
   disk_usage {
     cron = "* * * * * *"
   }
-  network_io {
+  network {
     cron = "* * * * * *"
   }
   //  load {

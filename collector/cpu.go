@@ -16,7 +16,7 @@ func (c *Cpu) Collect() *dto.Stat {
 		log.Error(err)
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "cpu_usage", value[0])
+	return dto.NewStat(dto.NewDatasource(), "cpu", value[0])
 }
 
 func (c *Cpu) Conf() Config {
