@@ -10,6 +10,12 @@ system {
   swap_memory {
     cron = "* * * * * *"
   }
+  disk_io {
+    cron = "* * * * * *"
+  }
+  disk_usage {
+    cron = "* * * * * *"
+  }
   network_io {
     cron = "* * * * * *"
   }

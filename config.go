@@ -30,12 +30,13 @@ type datasource struct {
 }
 
 type system struct {
-	Cpu     *collector.Cpu     `hcl:"cpu,block"`
-	VirtMem *collector.VirtMem `hcl:"virtual_memory,block"`
-	SwapMem *collector.SwapMem `hcl:"swap_memory,block"`
-	// todo disk
-	Net  *collector.Net  `hcl:"network_io,block"`
-	Load *collector.Load `hcl:"load,block"`
+	Cpu       *collector.Cpu       `hcl:"cpu,block"`
+	VirtMem   *collector.VirtMem   `hcl:"virtual_memory,block"`
+	SwapMem   *collector.SwapMem   `hcl:"swap_memory,block"`
+	DiskIo    *collector.DiskIo    `hcl:"disk_io,block"`
+	DiskUsage *collector.DiskUsage `hcl:"disk_usage,block"`
+	Net       *collector.Net       `hcl:"network_io,block"`
+	Load      *collector.Load      `hcl:"load,block"`
 }
 
 type postgres struct {
@@ -112,6 +113,8 @@ func (s *system) toInterface() []collector.SystemCollector {
 		s.Cpu,
 		s.VirtMem,
 		s.SwapMem,
+		s.DiskIo,
+		s.DiskUsage,
 		s.Net,
 		s.Load,
 	}
