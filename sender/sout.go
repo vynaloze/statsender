@@ -10,7 +10,7 @@ type Sout struct {
 }
 
 func (_ Sout) Send(payload *dto.Stat) {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 	p, err := json.Marshal(payload)
 	if err != nil {
 		log.Error(err)

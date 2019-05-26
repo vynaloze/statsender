@@ -9,12 +9,13 @@ import (
 	"github.com/vynaloze/statsender/logger"
 	"github.com/vynaloze/statsender/sender"
 	"os"
+	"unsafe"
 )
 
 func main() {
 	// Prepare logger
 	var logErr error
-	log, logErr := logger.Logger()
+	log, logErr := logger.New()
 	if logErr != nil {
 		fmt.Print(logErr)
 		os.Exit(1)
@@ -41,11 +42,14 @@ func main() {
 }
 
 func startCrons(datasources []collector.Datasource, systemCollectors []collector.SystemCollector, postgresCollectors []collector.PostgresCollector, targets []sender.Sender) {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 	crontab := cron.New()
 
 	// System collectors
 	for _, c := range systemCollectors {
+		if isNilValue(c) {
+			continue
+		}
 		err := crontab.AddFunc(c.Conf().Cron, systemJob(c, targets))
 		if err != nil {
 			log.Fatalf("Startup error - cron parse failed: %s", err)
@@ -54,6 +58,9 @@ func startCrons(datasources []collector.Datasource, systemCollectors []collector
 	// Postgres collectors
 	for _, ds := range datasources {
 		for _, p := range postgresCollectors {
+			if isNilValue(p) {
+				continue
+			}
 			err := crontab.AddFunc(p.Conf().Cron, postgresJob(ds, p, targets))
 			if err != nil {
 				log.Fatalf("Startup error - cron parse failed: %s", err)
@@ -82,4 +89,8 @@ func postgresJob(datasource collector.Datasource, postgresCollector collector.Po
 			target.Send(payload)
 		}
 	}
+}
+
+func isNilValue(i interface{}) bool {
+	return (*[2]uintptr)(unsafe.Pointer(&i))[1] == 0
 }

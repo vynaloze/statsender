@@ -102,11 +102,14 @@
   version = "v1.1"
 
 [[projects]]
-  digest = "1:bfc1b9ae0c8c925613f67faff48d1330cdfc48e70073b3bd0645290373aa9165"
+  digest = "1:59a99ee6c30649115155ed8db3ff4c07459b3cdecd7e462383b8723716f31356"
   name = "github.com/shirou/gopsutil"
   packages = [
     "cpu",
     "internal/common",
+    "load",
+    "mem",
+    "net",
   ]
   pruneopts = "UT"
   revision = "fa9845945e5b5c6ffb19b436586ff702a30417c5"
@@ -206,6 +209,9 @@
     "github.com/pkg/errors",
     "github.com/robfig/cron",
     "github.com/shirou/gopsutil/cpu",
+    "github.com/shirou/gopsutil/load",
+    "github.com/shirou/gopsutil/mem",
+    "github.com/shirou/gopsutil/net",
     "github.com/vynaloze/pgstats",
     "go.uber.org/zap",
   ]

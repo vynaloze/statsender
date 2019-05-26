@@ -7,11 +7,11 @@ datasource {
   ssl = "disable"
 }
 
-datasource {
-  host = "localhost"
-  port = 6432
-  username = "user"
-  password = "pass"
-  dbname = "testdb"
-  ssl = "disable"
-}
+//datasource {
+//  host = "localhost"
+//  port = 6432
+//  username = "user"
+//  password = "pass"
+//  dbname = "testdb"
+//  ssl = "disable"
+//}

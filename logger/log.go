@@ -14,7 +14,7 @@ func SetDebug(debug bool) {
 	}
 }
 
-func Logger() (*zap.SugaredLogger, error) {
+func New() (*zap.SugaredLogger, error) {
 	log, logErr := logConf.Build()
 	if logErr != nil {
 		return nil, logErr

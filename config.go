@@ -30,7 +30,12 @@ type datasource struct {
 }
 
 type system struct {
-	Cpu *collector.Cpu `hcl:"cpu,block"`
+	Cpu     *collector.Cpu     `hcl:"cpu,block"`
+	VirtMem *collector.VirtMem `hcl:"virtual_memory,block"`
+	SwapMem *collector.SwapMem `hcl:"swap_memory,block"`
+	// todo disk
+	Net  *collector.Net  `hcl:"network_io,block"`
+	Load *collector.Load `hcl:"load,block"`
 }
 
 type postgres struct {
@@ -38,7 +43,7 @@ type postgres struct {
 }
 
 func readConfig() (*config, error) {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 
 	// Find, parse, merge and decode all files
 	parser := hclparse.NewParser()
@@ -82,7 +87,7 @@ func readConfig() (*config, error) {
 }
 
 func allHclFiles() []string {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 	path, err := os.Getwd()
 	if err != nil {
 		log.Fatal(err)
@@ -105,6 +110,10 @@ func allHclFiles() []string {
 func (s *system) toInterface() []collector.SystemCollector {
 	return []collector.SystemCollector{
 		s.Cpu,
+		s.VirtMem,
+		s.SwapMem,
+		s.Net,
+		s.Load,
 	}
 }
 

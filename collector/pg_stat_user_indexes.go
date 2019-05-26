@@ -8,7 +8,7 @@ import (
 type PgStatUserIndexes Config
 
 func (p *PgStatUserIndexes) Collect(datasource Datasource) *dto.Stat {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 
 	s, err := datasource.Conn.PgStatUserIndexes()
 	if err != nil {

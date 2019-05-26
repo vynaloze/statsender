@@ -24,7 +24,7 @@ func NewDatasource() *Datasource {
 
 // Get preferred outbound ip of this machine
 func getOutboundIP() string {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 	conn, err := net.Dial("udp", "8.8.8.8:80")
 	if err != nil {
 		log.Fatal(err)
@@ -35,7 +35,7 @@ func getOutboundIP() string {
 }
 
 func getHostname() *string {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 	name, err := os.Hostname()
 	if err != nil {
 		log.Fatal(err)

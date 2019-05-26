@@ -9,7 +9,7 @@ import (
 type Cpu Config
 
 func (c *Cpu) Collect() *dto.Stat {
-	log, _ := logger.Logger()
+	log, _ := logger.New()
 
 	value, err := cpu.Percent(0, false)
 	if err != nil {
