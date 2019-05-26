@@ -22,13 +22,13 @@ type config struct {
 }
 
 type datasource struct {
-	Host     string `hcl:"host"`
-	Port     int    `hcl:"port"`
-	Username string `hcl:"username"`
-	Password string `hcl:"password"`
-	DbName   string `hcl:"dbname"`
-	Ssl      string `hcl:"ssl"`
-	// todo tags
+	Host     string            `hcl:"host"`
+	Port     int               `hcl:"port"`
+	Username string            `hcl:"username"`
+	Password string            `hcl:"password"`
+	DbName   string            `hcl:"dbname"`
+	Ssl      string            `hcl:"ssl"`
+	Tags     map[string]string `hcl:"tags"`
 }
 
 type system struct {

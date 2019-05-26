@@ -5,6 +5,10 @@ datasource {
   password = "hasL0"
   dbname = "foo"
   ssl = "disable"
+  tags = {
+    env = "prod",
+    iteration = "v1"
+  }
 }
 
 //datasource {
@@ -14,4 +18,5 @@ datasource {
 //  password = "pass"
 //  dbname = "testdb"
 //  ssl = "disable"
+//  tags = { env = "dev", iteration = "v1" }
 //}

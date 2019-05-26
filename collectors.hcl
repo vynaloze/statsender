@@ -2,23 +2,23 @@ debug = true
 
 system {
   cpu {
-    cron = "* * * * * *"
+    cron = "*/2 * * * * *"
   }
   virtual_memory {
-    cron = "* * * * * *"
+    cron = "*/5 * * * * *"
   }
-  swap_memory {
-    cron = "* * * * * *"
-  }
-  disk_io {
-    cron = "* * * * * *"
-  }
-  disk_usage {
-    cron = "* * * * * *"
-  }
-  network {
-    cron = "* * * * * *"
-  }
+  //  swap_memory {
+  //    cron = "* * * * * *"
+  //  }
+  //  disk_io {
+  //    cron = "* * * * * *"
+  //  }
+  //  disk_usage {
+  //    cron = "* * * * * *"
+  //  }
+  //  network {
+  //    cron = "* * * * * *"
+  //  }
   //  load {
   //    cron = "* * * * * *"
   //  }

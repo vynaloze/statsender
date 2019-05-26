@@ -28,7 +28,7 @@ func main() {
 	// Create datasources
 	var datasources []collector.Datasource
 	for _, ds := range c.Datasources {
-		d := dto.NewPostgresDsDto(ds.Host, ds.Port, ds.DbName)
+		d := dto.NewPostgresDsDto(ds.Host, ds.Port, ds.DbName, ds.Tags)
 		s, err := pgstats.Connect(ds.DbName, ds.Username, ds.Password, pgstats.Host(ds.Host), pgstats.Port(ds.Port), pgstats.SslMode(ds.Ssl))
 		if err != nil {
 			log.Fatal(err)

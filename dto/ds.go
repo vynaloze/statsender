@@ -21,7 +21,7 @@ func NewSystemDsDto() *Datasource {
 	return &ds
 }
 
-func NewPostgresDsDto(host string, port int, dbname string) *Datasource {
+func NewPostgresDsDto(host string, port int, dbname string, tags map[string]string) *Datasource {
 	ds := Datasource{}
 	if host == "localhost" || host == "127.0.0.1" {
 		ds.Ip = getOutboundIP()
@@ -32,6 +32,7 @@ func NewPostgresDsDto(host string, port int, dbname string) *Datasource {
 	}
 	ds.Port = &port
 	ds.Database = &dbname
+	ds.Tags = tags
 	return &ds
 }
 
