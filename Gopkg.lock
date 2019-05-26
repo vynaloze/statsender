@@ -66,6 +66,14 @@
   revision = "4b22149b7cef7272799ac85dca150e553d667971"
 
 [[projects]]
+  digest = "1:870d441fe217b8e689d7949fef6e43efbc787e50f200cb1e70dbca9204a1d6be"
+  name = "github.com/inconshreveable/mousetrap"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
+  version = "v1.0"
+
+[[projects]]
   digest = "1:bdd53b87de8185da386bae179c84d4848854c6870bacacf6a154fe63e2e750f7"
   name = "github.com/lib/pq"
   packages = [
@@ -115,6 +123,22 @@
   pruneopts = "UT"
   revision = "fa9845945e5b5c6ffb19b436586ff702a30417c5"
   version = "v2.19.04"
+
+[[projects]]
+  digest = "1:22799aea8fe96dd5693abdd1eaa14b1b29e3eafbdc7733fa155b3cb556c8a7ae"
+  name = "github.com/spf13/cobra"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "67fc4837d267bc9bfd6e47f77783fcc3dffc68de"
+  version = "v0.0.4"
+
+[[projects]]
+  digest = "1:c1b1102241e7f645bc8e0c22ae352e8f0dc6484b6cb4d132fa9f24174e0119e2"
+  name = "github.com/spf13/pflag"
+  packages = ["."]
+  pruneopts = "UT"
+  revision = "298182f68c66c05229eb03ac171abe6e309ee79a"
+  version = "v1.0.3"
 
 [[projects]]
   digest = "1:3dc6587e5d390a4f7b28665e3a57b00509ac5eeb3a3b6194930c5e8f523e4681"
@@ -214,6 +238,7 @@
     "github.com/shirou/gopsutil/load",
     "github.com/shirou/gopsutil/mem",
     "github.com/shirou/gopsutil/net",
+    "github.com/spf13/cobra",
     "github.com/vynaloze/pgstats",
     "go.uber.org/zap",
   ]
