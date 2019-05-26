@@ -110,8 +110,8 @@ func allHclFiles() []string {
 	return files
 }
 
-func (s *system) toInterface() []collector.SystemCollector {
-	return []collector.SystemCollector{
+func (s *system) toInterface() []collector.Collector {
+	return []collector.Collector{
 		s.Cpu,
 		s.VirtMem,
 		s.SwapMem,
@@ -122,8 +122,8 @@ func (s *system) toInterface() []collector.SystemCollector {
 	}
 }
 
-func (p *postgres) toInterface() []collector.PostgresCollector {
-	return []collector.PostgresCollector{
+func (p *postgres) toInterface() []collector.Collector {
+	return []collector.Collector{
 		p.PgStatUserIndexes,
 	}
 }

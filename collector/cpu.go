@@ -8,7 +8,7 @@ import (
 
 type Cpu Config
 
-func (c *Cpu) Collect() *dto.Stat {
+func (c *Cpu) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	value, err := cpu.Percent(0, false)
@@ -16,7 +16,7 @@ func (c *Cpu) Collect() *dto.Stat {
 		log.Error(err)
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "cpu", value[0])
+	return dto.NewStat(datasource.DsDto, "cpu", value[0])
 }
 
 func (c *Cpu) Conf() Config {

@@ -5,13 +5,8 @@ import (
 	"github.com/vynaloze/statsender/dto"
 )
 
-type SystemCollector interface {
-	Collect() *dto.Stat
-	Conf() Config
-}
-
-type PostgresCollector interface {
-	Collect(datasource Datasource) *dto.Stat
+type Collector interface {
+	Collect(datasource *Datasource) *dto.Stat
 	Conf() Config
 }
 
@@ -20,7 +15,6 @@ type Config struct {
 }
 
 type Datasource struct {
-	// all conn params here?
-	DsDto dto.Datasource
-	Conn  pgstats.PgStats
+	DsDto *dto.Datasource
+	Conn  *pgstats.PgStats
 }

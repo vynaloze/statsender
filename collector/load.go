@@ -9,7 +9,7 @@ import (
 
 type Load Config
 
-func (l *Load) Collect() *dto.Stat {
+func (l *Load) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	stats, err := load.Avg()
@@ -20,7 +20,7 @@ func (l *Load) Collect() *dto.Stat {
 		}
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "load", stats)
+	return dto.NewStat(datasource.DsDto, "load", stats)
 }
 
 func (l *Load) Conf() Config {

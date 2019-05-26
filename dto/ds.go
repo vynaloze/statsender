@@ -14,11 +14,24 @@ type Datasource struct {
 	Tags     map[string]string `json:"tags"`
 }
 
-func NewDatasource() *Datasource {
+func NewSystemDsDto() *Datasource {
 	ds := Datasource{}
 	ds.Ip = getOutboundIP()
 	ds.Hostname = getHostname()
-	// todo - add connection info
+	return &ds
+}
+
+func NewPostgresDsDto(host string, port int, dbname string) *Datasource {
+	ds := Datasource{}
+	if host == "localhost" || host == "127.0.0.1" {
+		ds.Ip = getOutboundIP()
+		ds.Hostname = getHostname()
+	} else {
+		ds.Ip = host
+		ds.Hostname = nil
+	}
+	ds.Port = &port
+	ds.Database = &dbname
 	return &ds
 }
 

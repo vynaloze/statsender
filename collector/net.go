@@ -8,7 +8,7 @@ import (
 
 type Net Config
 
-func (n *Net) Collect() *dto.Stat {
+func (n *Net) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	statsSlice, err := net.IOCounters(false)
@@ -23,7 +23,7 @@ func (n *Net) Collect() *dto.Stat {
 		log.Error("Not aggregated network statistics. This should never happened")
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "net", stats)
+	return dto.NewStat(datasource.DsDto, "net", stats)
 }
 
 func (n *Net) Conf() Config {

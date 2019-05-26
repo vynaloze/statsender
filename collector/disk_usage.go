@@ -8,7 +8,7 @@ import (
 
 type DiskUsage Config
 
-func (d *DiskUsage) Collect() *dto.Stat {
+func (d *DiskUsage) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	partitions, err := disk.Partitions(false)
@@ -25,7 +25,7 @@ func (d *DiskUsage) Collect() *dto.Stat {
 		allStats[p.Mountpoint] = *stats
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "disk_usage", allStats)
+	return dto.NewStat(datasource.DsDto, "disk_usage", allStats)
 }
 
 func (d *DiskUsage) Conf() Config {

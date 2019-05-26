@@ -7,7 +7,7 @@ import (
 
 type PgStatUserIndexes Config
 
-func (p *PgStatUserIndexes) Collect(datasource Datasource) *dto.Stat {
+func (p *PgStatUserIndexes) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	s, err := datasource.Conn.PgStatUserIndexes()
@@ -15,7 +15,7 @@ func (p *PgStatUserIndexes) Collect(datasource Datasource) *dto.Stat {
 		log.Error(err)
 	}
 
-	return dto.NewStat(&datasource.DsDto, "pg_stat_user_indexes", s)
+	return dto.NewStat(datasource.DsDto, "pg_stat_user_indexes", s)
 }
 
 func (p *PgStatUserIndexes) Conf() Config {

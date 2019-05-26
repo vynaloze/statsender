@@ -8,7 +8,7 @@ import (
 
 type SwapMem Config
 
-func (m *SwapMem) Collect() *dto.Stat {
+func (m *SwapMem) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	stats, err := mem.SwapMemory()
@@ -16,7 +16,7 @@ func (m *SwapMem) Collect() *dto.Stat {
 		log.Error(err)
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "swap_mem", stats)
+	return dto.NewStat(datasource.DsDto, "swap_mem", stats)
 }
 
 func (m *SwapMem) Conf() Config {

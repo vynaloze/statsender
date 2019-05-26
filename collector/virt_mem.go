@@ -8,7 +8,7 @@ import (
 
 type VirtMem Config
 
-func (m *VirtMem) Collect() *dto.Stat {
+func (m *VirtMem) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	stats, err := mem.VirtualMemory()
@@ -16,7 +16,7 @@ func (m *VirtMem) Collect() *dto.Stat {
 		log.Error(err)
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "virt_mem", stats)
+	return dto.NewStat(datasource.DsDto, "virt_mem", stats)
 }
 
 func (m *VirtMem) Conf() Config {

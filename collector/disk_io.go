@@ -8,7 +8,7 @@ import (
 
 type DiskIo Config
 
-func (d *DiskIo) Collect() *dto.Stat {
+func (d *DiskIo) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
 	stats, err := disk.IOCounters()
@@ -17,7 +17,7 @@ func (d *DiskIo) Collect() *dto.Stat {
 		log.Error(err)
 	}
 
-	return dto.NewStat(dto.NewDatasource(), "disk_io", stats)
+	return dto.NewStat(datasource.DsDto, "disk_io", stats)
 }
 
 func (d *DiskIo) Conf() Config {
