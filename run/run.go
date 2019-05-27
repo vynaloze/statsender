@@ -5,6 +5,7 @@ import (
 	"github.com/robfig/cron"
 	"github.com/vynaloze/pgstats"
 	"github.com/vynaloze/statsender/collector"
+	"github.com/vynaloze/statsender/config"
 	"github.com/vynaloze/statsender/dto"
 	"github.com/vynaloze/statsender/logger"
 	"github.com/vynaloze/statsender/sender"
@@ -12,7 +13,7 @@ import (
 	"unsafe"
 )
 
-func Run() { //todo some params here
+func Run(confDir string) {
 	// Prepare logger
 	var logErr error
 	log, logErr := logger.New()
@@ -21,7 +22,7 @@ func Run() { //todo some params here
 		os.Exit(1)
 	}
 	// Read configuration
-	c, cErr := readConfig()
+	c, cErr := config.ReadConfig(confDir)
 	if cErr != nil {
 		fmt.Print(cErr)
 		os.Exit(1)
@@ -38,7 +39,7 @@ func Run() { //todo some params here
 	}
 
 	// Start cron jobs and wait forever
-	startCrons(datasources, c.System.toInterface(), c.Postgres.toInterface(), c.sendersToInterface())
+	startCrons(datasources, c.System.ToInterface(), c.Postgres.ToInterface(), c.SendersToInterface())
 	select {}
 }
 

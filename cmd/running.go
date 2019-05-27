@@ -13,7 +13,7 @@ var cmdTry = &cobra.Command{
 Logs are printed directly to the console - useful for debugging purposes.`,
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		run.Run()
+		run.Run(configDir)
 	},
 }
 
@@ -25,6 +25,7 @@ var cmdRun = &cobra.Command{
 	Run: func(cmd *cobra.Command, args []string) {
 		fmt.Println("I just executed command 'run'...")
 		fmt.Println("Log dir:", logDir)
+		// todo detached mode
 	},
 }
 
@@ -32,6 +33,6 @@ var logDir string
 
 func addRunning() {
 	rootCmd.AddCommand(cmdTry)
-	cmdRun.Flags().StringVarP(&logDir, "log", "l", "/var/log/statsender", "Log directory location")
+	cmdRun.Flags().StringVarP(&logDir, "log", "l", "/var/log/statsender", "log directory location")
 	rootCmd.AddCommand(cmdRun)
 }
