@@ -5,7 +5,6 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/vynaloze/statsender/config"
 	"github.com/vynaloze/statsender/logger"
-	"strings"
 )
 
 var cmdDs = &cobra.Command{
@@ -24,15 +23,14 @@ If not stated otherwise (with flag --file or --filename), it will be saved in <c
 		if len(args) != 1 {
 			return errors.New("invalid number of arguments")
 		}
-		if _, err := config.ParseDSN(args[0]); err != nil {
+		if _, err := config.ParseDSN(args[0], tags); err != nil {
 			return err
 		}
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		log, _ := logger.New()
-		ds, _ := config.ParseDSN(args[0])
-		ds.Tags = parseTags(tags)
+		ds, _ := config.ParseDSN(args[0], tags) // unhandled error because we verify it in Args
 		log.Debugf("Parsed datasource: %v", *ds)
 		if err := config.AddDatasource(configDir, fileName, *ds); err != nil {
 			log.Fatal(err)
@@ -44,21 +42,8 @@ var tags []string
 var fileName string
 
 func addDs() {
-	cmdDsAdd.Flags().StringSliceVar(&tags, "tag", []string{}, "optional tag of a datasource, in format key=value")
+	cmdDsAdd.Flags().StringSliceVarP(&tags, "tag", "t", []string{}, "optional tag of a datasource, in format key=value")
 	cmdDsAdd.Flags().StringVarP(&fileName, "file", "f", "_ds.hcl", "the name of the configuration file to update")
 	cmdDs.AddCommand(cmdDsAdd)
 	rootCmd.AddCommand(cmdDs)
-}
-
-func parseTags(tags []string) map[string]string {
-	log, _ := logger.New()
-	m := make(map[string]string)
-	for _, t := range tags {
-		s := strings.Split(t, "=")
-		if len(s) != 2 {
-			log.Fatal("Invalid format of a tag") //todo nicer message, without scary stacktrace
-		}
-		m[s[0]] = s[1]
-	}
-	return m
 }

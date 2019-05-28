@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/pkg/errors"
 	"github.com/vynaloze/statsender/collector"
 	"github.com/vynaloze/statsender/sender"
 	"net/url"
@@ -37,12 +38,18 @@ func (c *Config) SendersToInterface() []sender.Sender {
 	return s
 }
 
-func ParseDSN(dsn string) (*Datasource, error) {
+func ParseDSN(dsn string, tags []string) (*Datasource, error) {
+	if !strings.HasPrefix(dsn, "postgresql://") {
+		dsn = strings.Join([]string{"postgresql://", dsn}, "")
+	}
 	u, err := url.Parse(dsn)
 	if err != nil {
 		return nil, err
 	}
 	host := u.Hostname()
+	if host == "" {
+		return nil, errors.New("hostname not set")
+	}
 	var port int64
 	if u.Port() == "" {
 		port = 5432
@@ -53,11 +60,33 @@ func ParseDSN(dsn string) (*Datasource, error) {
 		}
 	}
 	user := u.User.Username()
-	pass, _ := u.User.Password()
+	if user == "" {
+		return nil, errors.New("username not set")
+	}
+	pass, set := u.User.Password()
+	if !set {
+		return nil, errors.New("password not set")
+	}
 	db := strings.TrimPrefix(u.Path, "/")
+	if db == "" {
+		return nil, errors.New("dbname not set")
+	}
 	// todo support not only sslmode
 	sslMode := u.Query().Get("sslmode")
 
+	t, err := parseTags(tags)
 	return &Datasource{Host: host, Port: int(port), Username: user, Password: pass,
-		DbName: db, Ssl: sslMode}, nil
+		DbName: db, SslMode: sslMode, Tags: t}, err
+}
+
+func parseTags(tags []string) (map[string]string, error) {
+	m := make(map[string]string)
+	for _, t := range tags {
+		s := strings.Split(t, "=")
+		if len(s) != 2 {
+			return nil, errors.New("invalid format of a tag")
+		}
+		m[s[0]] = s[1]
+	}
+	return m, nil
 }

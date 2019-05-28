@@ -20,7 +20,7 @@ type Datasource struct {
 	Username string            `hcl:"username"`
 	Password string            `hcl:"password"`
 	DbName   string            `hcl:"dbname"`
-	Ssl      string            `hcl:"ssl"`
+	SslMode  string            `hcl:"sslmode"`
 	Tags     map[string]string `hcl:"tags"`
 }
 

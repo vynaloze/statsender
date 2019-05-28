@@ -228,6 +228,7 @@
   analyzer-name = "dep"
   analyzer-version = 1
   input-imports = [
+    "github.com/google/go-cmp/cmp",
     "github.com/hashicorp/hcl2/gohcl",
     "github.com/hashicorp/hcl2/hcl",
     "github.com/hashicorp/hcl2/hclparse",

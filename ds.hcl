@@ -4,7 +4,7 @@ datasource {
   username = "postgres"
   password = "hasL0"
   dbname = "foo"
-  ssl = "disable"
+  sslmode = "disable"
   tags = {
     env = "prod",
     iteration = "v1"
@@ -17,6 +17,6 @@ datasource {
 //  username = "user"
 //  password = "pass"
 //  dbname = "testdb"
-//  ssl = "disable"
+//  sslmode = "disable"
 //  tags = { env = "dev", iteration = "v1" }
 //}
