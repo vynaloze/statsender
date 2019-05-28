@@ -231,6 +231,7 @@
     "github.com/hashicorp/hcl2/gohcl",
     "github.com/hashicorp/hcl2/hcl",
     "github.com/hashicorp/hcl2/hclparse",
+    "github.com/hashicorp/hcl2/hclwrite",
     "github.com/pkg/errors",
     "github.com/robfig/cron",
     "github.com/shirou/gopsutil/cpu",

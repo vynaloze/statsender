@@ -2,7 +2,6 @@ package cmd
 
 import (
 	"errors"
-	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/vynaloze/statsender/config"
 	"github.com/vynaloze/statsender/logger"
@@ -22,7 +21,6 @@ var cmdDsAdd = &cobra.Command{
 	Long: `Adds a new datasource. 
 If not stated otherwise (with flag --file or --filename), it will be saved in <config_dir>/_ds.hcl`,
 	Args: func(cmd *cobra.Command, args []string) error {
-		fmt.Println(args)
 		if len(args) != 1 {
 			return errors.New("invalid number of arguments")
 		}
@@ -32,17 +30,22 @@ If not stated otherwise (with flag --file or --filename), it will be saved in <c
 		return nil
 	},
 	Run: func(cmd *cobra.Command, args []string) {
+		log, _ := logger.New()
 		ds, _ := config.ParseDSN(args[0])
 		ds.Tags = parseTags(tags)
-		fmt.Println(*ds)
-		// todo write to file - first migrate away from shitty HCL
+		log.Debugf("Parsed datasource: %v", *ds)
+		if err := config.AddDatasource(configDir, fileName, *ds); err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 
 var tags []string
+var fileName string
 
 func addDs() {
 	cmdDsAdd.Flags().StringSliceVar(&tags, "tag", []string{}, "optional tag of a datasource, in format key=value")
+	cmdDsAdd.Flags().StringVarP(&fileName, "file", "f", "_ds.hcl", "the name of the configuration file to update")
 	cmdDs.AddCommand(cmdDsAdd)
 	rootCmd.AddCommand(cmdDs)
 }
