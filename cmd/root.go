@@ -19,6 +19,7 @@ func init() {
 	rootCmd.PersistentFlags().StringVarP(&configDir, "config", "c", "/etc/statsender/conf.d", "sets configuration directory location")
 	addRunning()
 	addDs()
+	addSender()
 }
 
 func Execute() {

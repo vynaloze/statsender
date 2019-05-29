@@ -90,3 +90,33 @@ func parseTags(tags []string) (map[string]string, error) {
 	}
 	return m, nil
 }
+
+func ParseSender(args []string) (*sender.Sender, error) {
+	typ := args[0]
+	switch typ {
+	case "sout":
+		var s sender.Sender
+		s = sender.Sout{}
+		return &s, nil
+	case "http":
+		if len(args) < 2 {
+			return nil, errors.New("sender not specified")
+		}
+		spec := args[1]
+		if !strings.HasPrefix(spec, "http://") && !strings.HasPrefix(spec, "https://") {
+			spec = strings.Join([]string{"http://", spec}, "")
+		}
+		u, err := url.Parse(spec)
+		if err != nil {
+			return nil, err
+		}
+		if u.Host == "" {
+			return nil, errors.New("url not set")
+		}
+		var s sender.Sender
+		s = sender.Http{URL: u.Host, Endpoint: u.Path, MaxRetries: 3, RetryDelay: 7}
+		return &s, nil
+	default:
+		return nil, errors.New("invalid sender type - valid types: 'sout', 'http'")
+	}
+}

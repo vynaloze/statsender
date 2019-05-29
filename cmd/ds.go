@@ -32,18 +32,18 @@ If not stated otherwise (with flag --file or --filename), it will be saved in <c
 		log, _ := logger.New()
 		ds, _ := config.ParseDSN(args[0], tags) // unhandled error because we verify it in Args
 		log.Debugf("Parsed datasource: %v", *ds)
-		if err := config.AddDatasource(configDir, fileName, *ds); err != nil {
+		if err := config.AddDatasource(configDir, fileNameDs, *ds); err != nil {
 			log.Fatal(err)
 		}
 	},
 }
 
 var tags []string
-var fileName string
+var fileNameDs string
 
 func addDs() {
 	cmdDsAdd.Flags().StringSliceVarP(&tags, "tag", "t", []string{}, "optional tag of a datasource, in format key=value")
-	cmdDsAdd.Flags().StringVarP(&fileName, "file", "f", "_ds.hcl", "the name of the configuration file to update")
+	cmdDsAdd.Flags().StringVarP(&fileNameDs, "file", "f", "_ds.hcl", "the name of the configuration file to update")
 	cmdDs.AddCommand(cmdDsAdd)
 	rootCmd.AddCommand(cmdDs)
 }
