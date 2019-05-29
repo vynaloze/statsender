@@ -48,7 +48,7 @@ func AddSender(configDir string, filename string, s sender.Sender) error {
 		}{v}
 		gohcl.EncodeIntoBody(block, f.Body())
 	default:
-		return errors.New("invalid sender type - valid types: 'sout', 'http'")
+		return errors.New("invalid sender type - valid types: 'console', 'http'")
 	}
 
 	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)

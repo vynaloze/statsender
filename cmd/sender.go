@@ -11,14 +11,16 @@ var cmdSender = &cobra.Command{
 	Use:   "sender",
 	Short: "Manage senders",
 	Long: `Manage senders. 
-Type 'statsender sender' to see more details`,
+Type 'statsender sender --help' to see more details`,
 }
 
 var cmdSenderAdd = &cobra.Command{
-	Use:   "add",
-	Short: "Adds a new senders",
-	Long: `Adds a new senders. 
-If not stated otherwise (with flag --file or --filename), it will be saved in <config_dir>/_senders.hcl`,
+	Use:   "add <type> [<spec>]",
+	Short: "Adds a new sender",
+	Long: `Adds a new sender.
+Valid <type>s: 'console', 'http'
+In case of 'http', <spec> looks like: '[http://]host[:port][/endpoint]'
+If not stated otherwise (with flag --file or --filename), sender will be saved in <config_dir>/_senders.hcl`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 || len(args) > 2 {
 			return errors.New("invalid number of arguments")

@@ -94,7 +94,7 @@ func parseTags(tags []string) (map[string]string, error) {
 func ParseSender(args []string) (*sender.Sender, error) {
 	typ := args[0]
 	switch typ {
-	case "sout":
+	case "console":
 		var s sender.Sender
 		s = sender.Sout{}
 		return &s, nil
@@ -117,6 +117,6 @@ func ParseSender(args []string) (*sender.Sender, error) {
 		s = sender.Http{URL: u.Host, Endpoint: u.Path, MaxRetries: 3, RetryDelay: 7}
 		return &s, nil
 	default:
-		return nil, errors.New("invalid sender type - valid types: 'sout', 'http'")
+		return nil, errors.New("invalid sender type - valid types: 'console', 'http'")
 	}
 }

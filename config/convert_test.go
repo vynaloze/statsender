@@ -81,12 +81,12 @@ var parseSenderCorrectTestTable = []struct {
 	expected sender.Sender
 }{
 	{
-		"sout",
+		"console",
 		"",
 		sender.Sout{},
 	},
 	{
-		"sout",
+		"console",
 		"should be ignored",
 		sender.Sout{},
 	},

@@ -11,14 +11,16 @@ var cmdDs = &cobra.Command{
 	Use:   "datasource",
 	Short: "Manage datasources",
 	Long: `Manage datasources. 
-Type 'statsender datasource' to see more details`,
+Type 'statsender datasource --help' to see more details`,
 }
 
 var cmdDsAdd = &cobra.Command{
-	Use:   "add",
+	Use:   "add <DSN>",
 	Short: "Adds a new datasource",
 	Long: `Adds a new datasource. 
-If not stated otherwise (with flag --file or --filename), it will be saved in <config_dir>/_ds.hcl`,
+Valid <DSN> format: '[postgresql://]login:password@host[:port]/dbname[?param1=value1&...]'
+Optional tags are provided as flags: --tag key1=value1 --tag key2=value2 ...
+If not stated otherwise (with flag --file or --filename), datasource will be saved in <config_dir>/_ds.hcl`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) != 1 {
 			return errors.New("invalid number of arguments")
