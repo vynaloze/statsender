@@ -11,7 +11,8 @@ type Collector interface {
 }
 
 type Config struct {
-	Cron string `hcl:"cron"`
+	Cron    string `hcl:"cron"`
+	Enabled bool   `hcl:"enabled"`
 }
 
 type Datasource struct {

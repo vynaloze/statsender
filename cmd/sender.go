@@ -20,7 +20,7 @@ var cmdSenderAdd = &cobra.Command{
 	Long: `Adds a new sender.
 Valid <type>s: 'console', 'http'
 In case of 'http', <spec> looks like: '[http://]host[:port][/endpoint]'
-If not stated otherwise (with flag --file or --filename), sender will be saved in <config_dir>/_senders.hcl`,
+If not stated otherwise (with flag --file or --filename), sender will be saved in ${config_dir}/_senders.hcl`,
 	Args: func(cmd *cobra.Command, args []string) error {
 		if len(args) < 1 || len(args) > 2 {
 			return errors.New("invalid number of arguments")

@@ -8,8 +8,8 @@ import (
 type Config struct {
 	Debug       *bool         `hcl:"debug"`
 	Datasources []Datasource  `hcl:"datasource,block"`
-	System      System        `hcl:"system,block"`
-	Postgres    Postgres      `hcl:"postgres,block"`
+	System      *System       `hcl:"system,block"`
+	Postgres    *Postgres     `hcl:"postgres,block"`
 	Sout        *sender.Sout  `hcl:"console,block"`
 	Http        []sender.Http `hcl:"http,block"`
 }

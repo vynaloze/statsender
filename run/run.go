@@ -49,7 +49,7 @@ func startCrons(datasources []collector.Datasource, systemCollectors []collector
 
 	// System collectors
 	for _, c := range systemCollectors {
-		if isNilValue(c) {
+		if isNilValue(c) || !c.Conf().Enabled {
 			continue
 		}
 		err := crontab.AddFunc(c.Conf().Cron, newJob(collector.Datasource{DsDto: dto.NewSystemDsDto(), Conn: nil}, c, targets))
@@ -60,7 +60,7 @@ func startCrons(datasources []collector.Datasource, systemCollectors []collector
 	// Postgres collectors
 	for _, ds := range datasources {
 		for _, p := range postgresCollectors {
-			if isNilValue(p) {
+			if isNilValue(p) || !p.Conf().Enabled {
 				continue
 			}
 			err := crontab.AddFunc(p.Conf().Cron, newJob(ds, p, targets))

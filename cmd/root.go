@@ -20,6 +20,7 @@ func init() {
 	addRunning()
 	addDs()
 	addSender()
+	addCollector()
 }
 
 func Execute() {
