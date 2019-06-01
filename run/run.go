@@ -31,7 +31,7 @@ func Run(confDir string) {
 	var datasources []collector.Datasource
 	for _, ds := range c.Datasources {
 		d := dto.NewPostgresDsDto(ds.Host, ds.Port, ds.DbName, ds.Tags)
-		s, err := pgstats.Connect(ds.DbName, ds.Username, ds.Password, pgstats.Host(ds.Host), pgstats.Port(ds.Port), pgstats.SslMode(ds.SslMode))
+		s, err := pgstats.Connect(ds.DbName, ds.Username, ds.Password, optionalParams(ds)...)
 		if err != nil {
 			log.Fatal(err)
 		}
@@ -41,6 +41,23 @@ func Run(confDir string) {
 	// Start cron jobs and wait forever
 	startCrons(datasources, c.System.ToInterface(), c.Postgres.ToInterface(), c.SendersToInterface())
 	select {}
+}
+
+func optionalParams(ds config.Datasource) []pgstats.Option {
+	o := []pgstats.Option{pgstats.Host(ds.Host), pgstats.Port(ds.Port)}
+	if ds.SslMode != nil {
+		o = append(o, pgstats.SslMode(*ds.SslMode))
+	}
+	if ds.SslCert != nil {
+		o = append(o, pgstats.SslCert(*ds.SslCert))
+	}
+	if ds.SslRootCert != nil {
+		o = append(o, pgstats.SslRootCert(*ds.SslRootCert))
+	}
+	if ds.SslKey != nil {
+		o = append(o, pgstats.SslKey(*ds.SslKey))
+	}
+	return o
 }
 
 func startCrons(datasources []collector.Datasource, systemCollectors []collector.Collector, postgresCollectors []collector.Collector, targets []sender.Sender) {

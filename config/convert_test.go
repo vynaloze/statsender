@@ -6,6 +6,9 @@ import (
 	"testing"
 )
 
+var sslDisable = "disable"
+var sslCert = "/foo/bar.crt"
+
 var parseDSNCorrectTestTable = []struct {
 	dsn      string
 	tags     []string
@@ -14,31 +17,37 @@ var parseDSNCorrectTestTable = []struct {
 	{
 		"postgresql://user:pass@localhost:5432/db",
 		[]string{},
-		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 5432, DbName: "db", SslMode: "",
+		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 5432, DbName: "db",
 			Tags: map[string]string{}},
 	},
 	{
 		"postgresql://user:pass@localhost:5432/db?sslmode=disable",
 		[]string{},
-		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 5432, DbName: "db", SslMode: "disable",
+		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 5432, DbName: "db", SslMode: &sslDisable,
 			Tags: map[string]string{}},
+	},
+	{
+		"postgresql://user:pass@localhost:5432/db?sslmode=disable&sslcert=/foo/bar.crt",
+		[]string{},
+		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 5432, DbName: "db", SslMode: &sslDisable,
+			SslCert: &sslCert, Tags: map[string]string{}},
 	},
 	{
 		"postgresql://user:pass@localhost:6432/other_db",
 		[]string{"key=value", "foo=bar"},
-		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 6432, DbName: "other_db", SslMode: "",
+		&Datasource{Username: "user", Password: "pass", Host: "localhost", Port: 6432, DbName: "other_db",
 			Tags: map[string]string{"key": "value", "foo": "bar"}},
 	},
 	{
 		"user:pass@10.0.1.1:6432/db",
 		[]string{},
-		&Datasource{Username: "user", Password: "pass", Host: "10.0.1.1", Port: 6432, DbName: "db", SslMode: "",
+		&Datasource{Username: "user", Password: "pass", Host: "10.0.1.1", Port: 6432, DbName: "db",
 			Tags: map[string]string{}},
 	},
 	{
 		"postgresql://user:pass@10.0.1.1/db",
 		[]string{},
-		&Datasource{Username: "user", Password: "pass", Host: "10.0.1.1", Port: 5432, DbName: "db", SslMode: "",
+		&Datasource{Username: "user", Password: "pass", Host: "10.0.1.1", Port: 5432, DbName: "db",
 			Tags: map[string]string{}},
 	},
 }

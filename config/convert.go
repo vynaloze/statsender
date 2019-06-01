@@ -71,12 +71,30 @@ func ParseDSN(dsn string, tags []string) (*Datasource, error) {
 	if db == "" {
 		return nil, errors.New("dbname not set")
 	}
-	// todo support not only sslmode
-	sslMode := u.Query().Get("sslmode")
-
+	ds := &Datasource{Host: host, Port: int(port), Username: user, Password: pass,
+		DbName: db}
 	t, err := parseTags(tags)
-	return &Datasource{Host: host, Port: int(port), Username: user, Password: pass,
-		DbName: db, SslMode: sslMode, Tags: t}, err
+	if err != nil {
+		return nil, err
+	}
+	ds.Tags = t
+	sslMode := u.Query().Get("sslmode")
+	if sslMode != "" {
+		ds.SslMode = &sslMode
+	}
+	sslKey := u.Query().Get("sslkey")
+	if sslKey != "" {
+		ds.SslKey = &sslKey
+	}
+	sslCert := u.Query().Get("sslcert")
+	if sslCert != "" {
+		ds.SslCert = &sslCert
+	}
+	sslRootCert := u.Query().Get("sslrootcert")
+	if sslRootCert != "" {
+		ds.SslRootCert = &sslRootCert
+	}
+	return ds, nil
 }
 
 func parseTags(tags []string) (map[string]string, error) {

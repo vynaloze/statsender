@@ -141,15 +141,15 @@
   version = "v1.0.3"
 
 [[projects]]
-  digest = "1:3dc6587e5d390a4f7b28665e3a57b00509ac5eeb3a3b6194930c5e8f523e4681"
+  digest = "1:a088ecdacec86605f2fc69634533bf0d076d6b8b4470eda77430fd812bd99268"
   name = "github.com/vynaloze/pgstats"
   packages = [
     ".",
     "nullable",
   ]
   pruneopts = "UT"
-  revision = "053ce9bb6fe8fd832f7cb8f4d604c292a874ea9c"
-  version = "v2.0.0"
+  revision = "48a31823206099a46b0d4e946d5920a8ad265b4c"
+  version = "v2.0.1"
 
 [[projects]]
   branch = "master"

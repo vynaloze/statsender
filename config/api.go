@@ -14,13 +14,16 @@ type Config struct {
 }
 
 type Datasource struct {
-	Host     string            `hcl:"host"`
-	Port     int               `hcl:"port"`
-	Username string            `hcl:"username"`
-	Password string            `hcl:"password"`
-	DbName   string            `hcl:"dbname"`
-	SslMode  string            `hcl:"sslmode"`
-	Tags     map[string]string `hcl:"tags"`
+	Host        string            `hcl:"host"`
+	Port        int               `hcl:"port"`
+	Username    string            `hcl:"username"`
+	Password    string            `hcl:"password"`
+	DbName      string            `hcl:"dbname"`
+	SslMode     *string           `hcl:"sslmode"`
+	SslKey      *string           `hcl:"sslkey"`
+	SslCert     *string           `hcl:"sslcert"`
+	SslRootCert *string           `hcl:"sslrootcert"`
+	Tags        map[string]string `hcl:"tags"`
 }
 
 type System struct {
