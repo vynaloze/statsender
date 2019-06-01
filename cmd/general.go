@@ -1,6 +1,10 @@
 package cmd
 
-import "github.com/spf13/cobra"
+import (
+	"github.com/spf13/cobra"
+	"github.com/vynaloze/statsender/config"
+	"github.com/vynaloze/statsender/logger"
+)
 
 var cmdInit = &cobra.Command{
 	Use:   "init",
@@ -8,7 +12,11 @@ var cmdInit = &cobra.Command{
 	Long:  `Generates default configuration files and examples of usage.`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		//run.Run(configDir)
+		log, _ := logger.New()
+		err := config.InitConfig(configDir)
+		if err != nil {
+			log.Fatal(err)
+		}
 	},
 }
 

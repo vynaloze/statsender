@@ -14,6 +14,20 @@ import (
 	"strings"
 )
 
+func writeToFile(path string, content []byte, flags int) error {
+	file, err := os.OpenFile(path, flags, 0644)
+	if err != nil {
+		return err
+	}
+	if _, err := file.Write(content); err != nil {
+		return err
+	}
+	if err := file.Close(); err != nil {
+		return err
+	}
+	return nil
+}
+
 func AddDatasource(configDir string, filename string, datasource Datasource) error {
 	path := filepath.Join(configDir, filename)
 	err := os.MkdirAll(configDir, os.ModePerm)
@@ -27,17 +41,7 @@ func AddDatasource(configDir string, filename string, datasource Datasource) err
 	f := hclwrite.NewEmptyFile()
 	gohcl.EncodeIntoBody(block, f.Body())
 
-	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
-	if _, err := file.Write(f.Bytes()); err != nil {
-		return err
-	}
-	if err := file.Close(); err != nil {
-		return err
-	}
-	return nil
+	return writeToFile(path, f.Bytes(), os.O_APPEND|os.O_CREATE|os.O_WRONLY)
 }
 
 func AddSender(configDir string, filename string, s sender.Sender) error {
@@ -64,17 +68,7 @@ func AddSender(configDir string, filename string, s sender.Sender) error {
 		return errors.New("invalid sender type - valid types: 'console', 'http'")
 	}
 
-	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-	if err != nil {
-		return err
-	}
-	if _, err := file.Write(f.Bytes()); err != nil {
-		return err
-	}
-	if err := file.Close(); err != nil {
-		return err
-	}
-	return nil
+	return writeToFile(path, f.Bytes(), os.O_APPEND|os.O_CREATE|os.O_WRONLY)
 }
 
 type collectorConfig struct {
@@ -134,17 +128,7 @@ func replaceInFile(configDir string, filename string, typ string, setValFunc fun
 	w := hclwrite.NewEmptyFile()
 	gohcl.EncodeIntoBody(c, w.Body())
 	// write
-	file, err := os.OpenFile(path, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
-	if err != nil {
-		return err
-	}
-	if _, err := file.Write(w.Bytes()); err != nil {
-		return err
-	}
-	if err := file.Close(); err != nil {
-		return err
-	}
-	return nil
+	return writeToFile(path, w.Bytes(), os.O_CREATE|os.O_WRONLY|os.O_TRUNC)
 }
 
 func setValue(c collectorConfig, typ string, setValFunc func(field *reflect.Value)) (collectorConfig, error) {
@@ -168,4 +152,37 @@ func setValue(c collectorConfig, typ string, setValFunc func(field *reflect.Valu
 		}
 	}
 	return c, errors.New("collector " + typ + " not found in config")
+}
+
+func InitConfig(configDir string) error {
+	log, _ := logger.New()
+	// create dir if not exists
+	log.Debugf("creating config dir %s (if it not exist)", configDir)
+	err := os.MkdirAll(configDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
+	// create collector config example
+	log.Debug("creating _collectors.hcl")
+	pathC := filepath.Join(configDir, "_collectors.hcl")
+	err = writeToFile(pathC, []byte(defaultCollectorConfig), os.O_CREATE|os.O_WRONLY|os.O_TRUNC)
+	if err != nil {
+		return err
+	}
+	// create datasource config example
+	log.Debug("creating _datasources.hcl")
+	pathD := filepath.Join(configDir, "_datasources.hcl")
+	err = writeToFile(pathD, []byte(defaultDatasourceConfig), os.O_CREATE|os.O_WRONLY|os.O_TRUNC)
+	if err != nil {
+		return err
+	}
+	// create sender config example
+	log.Debug("creating _senders.hcl")
+	pathS := filepath.Join(configDir, "_senders.hcl")
+	err = writeToFile(pathS, []byte(defaultSenderConfig), os.O_CREATE|os.O_WRONLY|os.O_TRUNC)
+	if err != nil {
+		return err
+	}
+	log.Debug("done...")
+	return nil
 }
