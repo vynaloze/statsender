@@ -15,18 +15,36 @@ func ReadConfig(dir string) (*Config, error) {
 	var files []*hcl.File
 	var diags hcl.Diagnostics
 
+	// find all files
 	allFiles, err := allHclFiles(dir)
 	if err != nil {
 		return nil, err
 	}
 
+	// parse them
 	for _, fn := range allFiles {
 		f, moreDiags := parser.ParseHCLFile(fn)
 		files = append(files, f)
 		diags = append(diags, moreDiags...)
 	}
+	// Check for errors
+	if diags.HasErrors() {
+		wr := hcl.NewDiagnosticTextWriter(
+			os.Stdout,      // writer to send messages to
+			parser.Files(), // the parser's file cache, for source snippets
+			78,             // wrapping width
+			true,           // generate colored/highlighted output
+		)
+		err := wr.WriteDiagnostics(diags)
+		if err != nil {
+			return nil, err
+		}
+		return nil, errors.New("invalid configuration - see diagnostics above")
+	}
 
+	// merge them
 	body := hcl.MergeFiles(files)
+	// decode them
 	var c Config
 	moreDiags := gohcl.DecodeBody(body, nil, &c)
 	diags = append(diags, moreDiags...)
@@ -52,8 +70,8 @@ func allHclFiles(dir string) ([]string, error) {
 	var files []string
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, _ error) error {
 		if !f.IsDir() {
-			if filepath.Ext(path) == ".hcl" {
-				files = append(files, f.Name())
+			if filepath.Ext(path) == ".hcl" || filepath.Ext(path) == ".json" {
+				files = append(files, filepath.Join(dir, f.Name()))
 			}
 		}
 		return nil

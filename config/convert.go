@@ -120,19 +120,18 @@ func ParseSender(args []string) (*sender.Sender, error) {
 		if len(args) < 2 {
 			return nil, errors.New("sender not specified")
 		}
-		spec := args[1]
-		if !strings.HasPrefix(spec, "http://") && !strings.HasPrefix(spec, "https://") {
-			spec = strings.Join([]string{"http://", spec}, "")
-		}
-		u, err := url.Parse(spec)
+		u, err := url.Parse(args[1])
 		if err != nil {
 			return nil, err
 		}
+		if u.Scheme == "" {
+			return nil, errors.New("scheme not specified")
+		}
 		if u.Host == "" {
-			return nil, errors.New("url not set")
+			return nil, errors.New("host not specified")
 		}
 		var s sender.Sender
-		s = sender.Http{URL: u.Host, Endpoint: u.Path, MaxRetries: 3, RetryDelay: 7}
+		s = sender.Http{Target: args[1], MaxRetries: 3, RetryDelay: 7}
 		return &s, nil
 	default:
 		return nil, errors.New("invalid sender type - valid types: 'console', 'http'")

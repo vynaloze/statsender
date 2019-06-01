@@ -21,13 +21,13 @@ func Run(confDir string) {
 		fmt.Print(logErr)
 		os.Exit(1)
 	}
-	// Read configuration
+	log.Debug("reading configuration")
 	c, cErr := config.ReadConfig(confDir)
 	if cErr != nil {
-		fmt.Print(cErr)
+		log.Fatal(cErr)
 		os.Exit(1)
 	}
-	// Create datasources
+	log.Debug("connecting to datasources")
 	var datasources []collector.Datasource
 	for _, ds := range c.Datasources {
 		d := dto.NewPostgresDsDto(ds.Host, ds.Port, ds.DbName, ds.Tags)
@@ -38,8 +38,9 @@ func Run(confDir string) {
 		datasources = append(datasources, collector.Datasource{DsDto: d, Conn: s})
 	}
 
-	// Start cron jobs and wait forever
+	log.Debug("starting collector jobs in the background")
 	startCrons(datasources, c.System.ToInterface(), c.Postgres.ToInterface(), c.SendersToInterface())
+	// wait forever
 	select {}
 }
 
@@ -67,8 +68,10 @@ func startCrons(datasources []collector.Datasource, systemCollectors []collector
 	// System collectors
 	for _, c := range systemCollectors {
 		if isNilValue(c) || !c.Conf().Enabled {
+			log.Debugf("skipping disabled collector %+v", c)
 			continue
 		}
+		log.Debugf("scheduling collector %+v", c)
 		err := crontab.AddFunc(c.Conf().Cron, newJob(collector.Datasource{DsDto: dto.NewSystemDsDto(), Conn: nil}, c, targets))
 		if err != nil {
 			log.Fatalf("Startup error - cron parse failed: %s", err)
@@ -76,10 +79,13 @@ func startCrons(datasources []collector.Datasource, systemCollectors []collector
 	}
 	// Postgres collectors
 	for _, ds := range datasources {
+		log.Debugf("scheduling collectors for datasource %+v", ds)
 		for _, p := range postgresCollectors {
 			if isNilValue(p) || !p.Conf().Enabled {
+				log.Debugf("skipping disabled collector %+v", p)
 				continue
 			}
+			log.Debugf("scheduling collector %+v", p)
 			err := crontab.AddFunc(p.Conf().Cron, newJob(ds, p, targets))
 			if err != nil {
 				log.Fatalf("Startup error - cron parse failed: %s", err)

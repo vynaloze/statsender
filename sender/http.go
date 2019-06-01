@@ -11,8 +11,7 @@ import (
 )
 
 type Http struct {
-	URL        string `hcl:"url"`
-	Endpoint   string `hcl:"endpoint"`
+	Target     string `hcl:"target"`
 	RetryDelay int    `hcl:"retryDelay"`
 	MaxRetries int    `hcl:"maxRetries"`
 	retries    int
@@ -26,9 +25,9 @@ func (h Http) Send(payload *dto.Stat) {
 		log.Error(err)
 	}
 	data := string(p)
-	log.Debugf("Target:%s; Data: %s", h.URL+h.Endpoint, data)
+	log.Debugf("Target:%s; Data: %s", h.Target, data)
 
-	response, err := http.Post(h.URL+h.Endpoint, "application/json", bytes.NewBuffer(p))
+	response, err := http.Post(h.Target, "application/json", bytes.NewBuffer(p))
 	log.Debug("Response: %s", response)
 
 	var failure string

@@ -101,33 +101,33 @@ var parseSenderCorrectTestTable = []struct {
 	},
 	{
 		"http",
-		"10.0.1.2:8080/stats",
-		sender.Http{URL: "10.0.1.2:8080", Endpoint: "/stats", MaxRetries: 3, RetryDelay: 7},
+		"http://10.0.1.2:8080/stats",
+		sender.Http{Target: "http://10.0.1.2:8080/stats", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
-		"localhost:8080/stats",
-		sender.Http{URL: "localhost:8080", Endpoint: "/stats", MaxRetries: 3, RetryDelay: 7},
+		"http://localhost:8080/stats",
+		sender.Http{Target: "http://localhost:8080/stats", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
-		"10.0.1.2:8080/stats/v2",
-		sender.Http{URL: "10.0.1.2:8080", Endpoint: "/stats/v2", MaxRetries: 3, RetryDelay: 7},
+		"http://10.0.1.2:8080/stats/v2",
+		sender.Http{Target: "http://10.0.1.2:8080/stats/v2", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
-		"10.0.1.2/stats",
-		sender.Http{URL: "10.0.1.2", Endpoint: "/stats", MaxRetries: 3, RetryDelay: 7},
+		"http://10.0.1.2/stats",
+		sender.Http{Target: "http://10.0.1.2/stats", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
-		"10.0.1.2:8080",
-		sender.Http{URL: "10.0.1.2:8080", Endpoint: "", MaxRetries: 3, RetryDelay: 7},
+		"http://10.0.1.2:8080",
+		sender.Http{Target: "http://10.0.1.2:8080", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
-		"10.0.1.2",
-		sender.Http{URL: "10.0.1.2", Endpoint: "", MaxRetries: 3, RetryDelay: 7},
+		"http://10.0.1.2",
+		sender.Http{Target: "http://10.0.1.2", MaxRetries: 3, RetryDelay: 7},
 	},
 }
 
@@ -149,6 +149,7 @@ var parseSenderFailTestTable = []struct {
 }{
 	{"unknown", ""},
 	{"http", "/stats"},
+	{"http", "10.0.1.2:8080/stats"},
 }
 
 func TestFailParseSender(t *testing.T) {

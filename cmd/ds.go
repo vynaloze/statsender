@@ -32,8 +32,9 @@ If not stated otherwise (with flag --file or --filename), datasource will be sav
 	},
 	Run: func(cmd *cobra.Command, args []string) {
 		log, _ := logger.New()
+		log.Debug("parsing DSN")
 		ds, _ := config.ParseDSN(args[0], tags) // unhandled error because we verify it in Args
-		log.Debugf("Parsed datasource: %v", *ds)
+		log.Debugf("parsed datasource: %+v", *ds)
 		if err := config.AddDatasource(configDir, fileNameDs, *ds); err != nil {
 			log.Fatal(err)
 		}
