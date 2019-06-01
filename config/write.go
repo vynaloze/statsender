@@ -16,6 +16,10 @@ import (
 
 func AddDatasource(configDir string, filename string, datasource Datasource) error {
 	path := filepath.Join(configDir, filename)
+	err := os.MkdirAll(configDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
 	block := struct {
 		Datasource Datasource `hcl:"datasource,block"`
 	}{datasource}
@@ -38,6 +42,10 @@ func AddDatasource(configDir string, filename string, datasource Datasource) err
 
 func AddSender(configDir string, filename string, s sender.Sender) error {
 	path := filepath.Join(configDir, filename)
+	err := os.MkdirAll(configDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
 	f := hclwrite.NewEmptyFile()
 
 	switch v := s.(type) {
@@ -89,6 +97,10 @@ func SetCollectorCron(configDir string, filename string, typ string, cron string
 func replaceInFile(configDir string, filename string, typ string, setValFunc func(field *reflect.Value)) error {
 	// Read file
 	path := filepath.Join(configDir, filename)
+	err := os.MkdirAll(configDir, os.ModePerm)
+	if err != nil {
+		return err
+	}
 	parser := hclparse.NewParser()
 	f, diags := parser.ParseHCLFile(path)
 	if diags.HasErrors() {
@@ -114,7 +126,7 @@ func replaceInFile(configDir string, filename string, typ string, setValFunc fun
 	}
 
 	// Change state of required collector
-	c, err := setValue(c, typ, setValFunc)
+	c, err = setValue(c, typ, setValFunc)
 	if err != nil {
 		return err
 	}

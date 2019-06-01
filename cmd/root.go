@@ -16,11 +16,12 @@ func init() {
 	cobra.OnInitialize(initConfig)
 	rootCmd.Version = "0.0.1"
 	rootCmd.PersistentFlags().BoolVarP(&verbose, "verbose", "v", false, "verbose output")
-	rootCmd.PersistentFlags().StringVarP(&configDir, "config", "c", "/etc/statsender/conf.d", "sets configuration directory location")
+	rootCmd.PersistentFlags().StringVarP(&configDir, "config", "c", "conf", "sets configuration directory location")
 	addRunning()
 	addDs()
 	addSender()
 	addCollector()
+	addGeneral()
 }
 
 func Execute() {

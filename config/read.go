@@ -5,20 +5,22 @@ import (
 	"github.com/hashicorp/hcl2/hcl"
 	"github.com/hashicorp/hcl2/hclparse"
 	"github.com/pkg/errors"
-	"github.com/vynaloze/statsender/logger"
 	"os"
 	"path/filepath"
 )
 
 func ReadConfig(dir string) (*Config, error) {
-	log, _ := logger.New()
-
 	// Find, parse, merge and decode all files
 	parser := hclparse.NewParser()
 	var files []*hcl.File
 	var diags hcl.Diagnostics
 
-	for _, fn := range allHclFiles(dir) {
+	allFiles, err := allHclFiles(dir)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, fn := range allFiles {
 		f, moreDiags := parser.ParseHCLFile(fn)
 		files = append(files, f)
 		diags = append(diags, moreDiags...)
@@ -39,23 +41,14 @@ func ReadConfig(dir string) (*Config, error) {
 		)
 		err := wr.WriteDiagnostics(diags)
 		if err != nil {
-			log.Error(err)
+			return nil, err
 		}
 		return nil, errors.New("invalid configuration - see diagnostics above")
 	}
-
-	// Set log level
-	if c.Debug == nil {
-		logger.SetDebug(false)
-	} else {
-		logger.SetDebug(*c.Debug)
-	}
-
 	return &c, nil
 }
 
-func allHclFiles(dir string) []string {
-	log, _ := logger.New()
+func allHclFiles(dir string) ([]string, error) {
 	var files []string
 	err := filepath.Walk(dir, func(path string, f os.FileInfo, _ error) error {
 		if !f.IsDir() {
@@ -66,10 +59,10 @@ func allHclFiles(dir string) []string {
 		return nil
 	})
 	if err != nil {
-		log.Fatal(err)
+		return nil, err
 	}
 	if len(files) == 0 {
-		log.Fatal("No files found in the given directory", dir)
+		return nil, errors.New("No files found in the given directory " + dir)
 	}
-	return files
+	return files, nil
 }

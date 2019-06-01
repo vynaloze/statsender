@@ -1,21 +1,9 @@
 package cmd
 
 import (
-	"fmt"
 	"github.com/spf13/cobra"
 	"github.com/vynaloze/statsender/run"
 )
-
-var cmdTry = &cobra.Command{
-	Use:   "try",
-	Short: "Runs the application",
-	Long: `Runs the application in the foreground.
-Logs are printed directly to the console - useful for debugging purposes.`,
-	Args: cobra.NoArgs,
-	Run: func(cmd *cobra.Command, args []string) {
-		run.Run(configDir)
-	},
-}
 
 var cmdRun = &cobra.Command{
 	Use:   "run",
@@ -23,8 +11,7 @@ var cmdRun = &cobra.Command{
 	Long:  `Runs the application in the background.`,
 	Args:  cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		fmt.Println("I just executed command 'run'...")
-		fmt.Println("Log dir:", logDir)
+		run.Run(configDir)
 		// todo detached mode
 	},
 }
@@ -32,7 +19,6 @@ var cmdRun = &cobra.Command{
 var logDir string
 
 func addRunning() {
-	rootCmd.AddCommand(cmdTry)
-	cmdRun.Flags().StringVarP(&logDir, "log", "l", "/var/log/statsender", "log directory location")
+	cmdRun.Flags().StringVarP(&logDir, "log", "l", "logs", "log directory location")
 	rootCmd.AddCommand(cmdRun)
 }

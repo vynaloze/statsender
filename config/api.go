@@ -6,7 +6,6 @@ import (
 )
 
 type Config struct {
-	Debug       *bool         `hcl:"debug"`
 	Datasources []Datasource  `hcl:"datasource,block"`
 	System      *System       `hcl:"system,block"`
 	Postgres    *Postgres     `hcl:"postgres,block"`
