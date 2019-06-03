@@ -131,7 +131,9 @@ func ParseSender(args []string) (*sender.Sender, error) {
 			return nil, errors.New("host not specified")
 		}
 		var s sender.Sender
-		s = sender.Http{Target: args[1], MaxRetries: 3, RetryDelay: 7}
+		r, _ := strconv.ParseInt(args[2], 10, 0)
+		d, _ := strconv.ParseInt(args[3], 10, 0)
+		s = sender.Http{Target: args[1], MaxRetries: int(r), RetryDelay: int(d)}
 		return &s, nil
 	default:
 		return nil, errors.New("invalid sender type - valid types: 'console', 'http'")

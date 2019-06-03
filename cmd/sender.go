@@ -5,6 +5,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/vynaloze/statsender/config"
 	"github.com/vynaloze/statsender/logger"
+	"strconv"
 )
 
 var cmdSender = &cobra.Command{
@@ -25,7 +26,7 @@ If not stated otherwise (with flag --file or --filename), sender will be saved i
 		if len(args) < 1 || len(args) > 2 {
 			return errors.New("invalid number of arguments")
 		}
-		if _, err := config.ParseSender(args); err != nil {
+		if _, err := config.ParseSender(append(args, strconv.Itoa(httpRetries), strconv.Itoa(httpDelay))); err != nil {
 			return err
 		}
 		return nil
@@ -33,7 +34,7 @@ If not stated otherwise (with flag --file or --filename), sender will be saved i
 	Run: func(cmd *cobra.Command, args []string) {
 		log, _ := logger.New()
 		log.Debug("parsing argument")
-		s, _ := config.ParseSender(args) // unhandled error because we verify it in Args
+		s, _ := config.ParseSender(append(args, strconv.Itoa(httpRetries), strconv.Itoa(httpDelay))) // unhandled error because we verify it in Args
 		log.Debugf("parsed sender: %+v", *s)
 		if err := config.AddSender(configDir, fileNameSender, *s); err != nil {
 			log.Fatal(err)
@@ -42,9 +43,13 @@ If not stated otherwise (with flag --file or --filename), sender will be saved i
 }
 
 var fileNameSender string
+var httpRetries int
+var httpDelay int
 
 func addSender() {
 	cmdSenderAdd.Flags().StringVarP(&fileNameSender, "file", "f", "_senders.hcl", "the name of the configuration file to update")
+	cmdSenderAdd.Flags().IntVarP(&httpRetries, "retries", "r", 5, "how many times should the sender retry before giving up")
+	cmdSenderAdd.Flags().IntVarP(&httpDelay, "delay", "d", 60, "how long should the sender wait between retries (in seconds)")
 	cmdSender.AddCommand(cmdSenderAdd)
 	rootCmd.AddCommand(cmdSender)
 }
