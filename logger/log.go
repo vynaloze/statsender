@@ -14,6 +14,12 @@ func SetDebug(debug bool) {
 	}
 }
 
+func OutputToFile(file string) {
+	logConf.OutputPaths = []string{
+		file,
+	}
+}
+
 func New() (*zap.SugaredLogger, error) {
 	log, logErr := logConf.Build()
 	if logErr != nil {
