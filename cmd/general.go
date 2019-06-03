@@ -4,6 +4,7 @@ import (
 	"github.com/spf13/cobra"
 	"github.com/vynaloze/statsender/config"
 	"github.com/vynaloze/statsender/logger"
+	"github.com/vynaloze/statsender/run"
 )
 
 var cmdInit = &cobra.Command{
@@ -28,7 +29,7 @@ and if it is possible to establish connections to databases and http endpoints.
 Displays stats that will be collected and their intervals`,
 	Args: cobra.NoArgs,
 	Run: func(cmd *cobra.Command, args []string) {
-		//run.Run(configDir)
+		run.Try(configDir)
 	},
 }
 

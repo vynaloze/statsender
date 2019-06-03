@@ -49,6 +49,11 @@ func (h Http) Send(payload *dto.Stat) {
 
 }
 
+func (h Http) Test() error {
+	_, err := http.Post(h.Target, "application/json", nil)
+	return err
+}
+
 func (h Http) forwardWithDelay(payload *dto.Stat) {
 	h.retries++
 	for range time.Tick(time.Duration(h.RetryDelay) * time.Second) {

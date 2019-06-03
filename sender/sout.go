@@ -18,3 +18,7 @@ func (_ Sout) Send(payload *dto.Stat) {
 	data := string(p)
 	log.Info(data)
 }
+
+func (_ Sout) Test() error {
+	return nil
+}

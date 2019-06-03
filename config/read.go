@@ -1,6 +1,7 @@
 package config
 
 import (
+	"github.com/fatih/color"
 	"github.com/hashicorp/hcl2/gohcl"
 	"github.com/hashicorp/hcl2/hcl"
 	"github.com/hashicorp/hcl2/hclparse"
@@ -9,7 +10,13 @@ import (
 	"path/filepath"
 )
 
-func ReadConfig(dir string) (*Config, error) {
+type ConfigError struct {
+	err   error
+	diags hcl.Diagnostics
+	files map[string]*hcl.File
+}
+
+func ReadConfig(dir string) (*Config, *ConfigError) {
 	// Find, parse, merge and decode all files
 	parser := hclparse.NewParser()
 	var files []*hcl.File
@@ -18,7 +25,7 @@ func ReadConfig(dir string) (*Config, error) {
 	// find all files
 	allFiles, err := allHclFiles(dir)
 	if err != nil {
-		return nil, err
+		return nil, &ConfigError{err: err}
 	}
 
 	// parse them
@@ -29,17 +36,7 @@ func ReadConfig(dir string) (*Config, error) {
 	}
 	// Check for errors
 	if diags.HasErrors() {
-		wr := hcl.NewDiagnosticTextWriter(
-			os.Stdout,      // writer to send messages to
-			parser.Files(), // the parser's file cache, for source snippets
-			78,             // wrapping width
-			true,           // generate colored/highlighted output
-		)
-		err := wr.WriteDiagnostics(diags)
-		if err != nil {
-			return nil, err
-		}
-		return nil, errors.New("invalid configuration - see diagnostics above")
+		return nil, &ConfigError{diags: diags, files: parser.Files()}
 	}
 
 	// merge them
@@ -51,19 +48,28 @@ func ReadConfig(dir string) (*Config, error) {
 
 	// Check for errors
 	if diags.HasErrors() {
-		wr := hcl.NewDiagnosticTextWriter(
-			os.Stdout,      // writer to send messages to
-			parser.Files(), // the parser's file cache, for source snippets
-			78,             // wrapping width
-			true,           // generate colored/highlighted output
-		)
-		err := wr.WriteDiagnostics(diags)
-		if err != nil {
-			return nil, err
-		}
-		return nil, errors.New("invalid configuration - see diagnostics above")
+		return nil, &ConfigError{diags: diags, files: parser.Files()}
 	}
 	return &c, nil
+}
+
+func (ce ConfigError) Print() error {
+	if ce.err != nil {
+		redBold := color.New(color.FgRed).Add(color.Bold)
+		red := color.New(color.FgRed)
+		_, _ = redBold.Print("FAIL: ")
+		_, _ = red.Println(ce.err.Error())
+	}
+	if ce.diags != nil {
+		wr := hcl.NewDiagnosticTextWriter(
+			os.Stdout, // writer to send messages to
+			ce.files,  // the parser's file cache, for source snippets
+			78,        // wrapping width
+			true,      // generate colored/highlighted output
+		)
+		return wr.WriteDiagnostics(ce.diags)
+	}
+	return nil
 }
 
 func allHclFiles(dir string) ([]string, error) {
@@ -80,7 +86,7 @@ func allHclFiles(dir string) ([]string, error) {
 		return nil, err
 	}
 	if len(files) == 0 {
-		return nil, errors.New("No files found in the given directory " + dir)
+		return nil, errors.New("no files found in the given directory " + dir)
 	}
 	return files, nil
 }

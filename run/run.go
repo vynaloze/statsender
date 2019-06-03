@@ -3,14 +3,12 @@ package run
 import (
 	"fmt"
 	"github.com/robfig/cron"
-	"github.com/vynaloze/pgstats"
 	"github.com/vynaloze/statsender/collector"
 	"github.com/vynaloze/statsender/config"
 	"github.com/vynaloze/statsender/dto"
 	"github.com/vynaloze/statsender/logger"
 	"github.com/vynaloze/statsender/sender"
 	"os"
-	"unsafe"
 )
 
 func Run(confDir string) {
@@ -24,41 +22,23 @@ func Run(confDir string) {
 	log.Debug("reading configuration")
 	c, cErr := config.ReadConfig(confDir)
 	if cErr != nil {
-		log.Fatal(cErr)
-		os.Exit(1)
-	}
-	log.Debug("connecting to datasources")
-	var datasources []collector.Datasource
-	for _, ds := range c.Datasources {
-		d := dto.NewPostgresDsDto(ds.Host, ds.Port, ds.DbName, ds.Tags)
-		s, err := pgstats.Connect(ds.DbName, ds.Username, ds.Password, optionalParams(ds)...)
+		err := cErr.Print()
 		if err != nil {
 			log.Fatal(err)
 		}
-		datasources = append(datasources, collector.Datasource{DsDto: d, Conn: s})
+		os.Exit(1)
+	}
+	log.Debug("connecting to datasources")
+	datasources, errs := connectToDatasources(c)
+	if errs != nil {
+		errs.print()
+		os.Exit(1)
 	}
 
 	log.Debug("starting collector jobs in the background")
 	startCrons(datasources, c.System.ToInterface(), c.Postgres.ToInterface(), c.SendersToInterface())
 	// wait forever
 	select {}
-}
-
-func optionalParams(ds config.Datasource) []pgstats.Option {
-	o := []pgstats.Option{pgstats.Host(ds.Host), pgstats.Port(ds.Port)}
-	if ds.SslMode != nil {
-		o = append(o, pgstats.SslMode(*ds.SslMode))
-	}
-	if ds.SslCert != nil {
-		o = append(o, pgstats.SslCert(*ds.SslCert))
-	}
-	if ds.SslRootCert != nil {
-		o = append(o, pgstats.SslRootCert(*ds.SslRootCert))
-	}
-	if ds.SslKey != nil {
-		o = append(o, pgstats.SslKey(*ds.SslKey))
-	}
-	return o
 }
 
 func startCrons(datasources []collector.Datasource, systemCollectors []collector.Collector, postgresCollectors []collector.Collector, targets []sender.Sender) {
@@ -104,8 +84,4 @@ func newJob(datasource collector.Datasource, collector collector.Collector, targ
 			go target.Send(payload)
 		}
 	}
-}
-
-func isNilValue(i interface{}) bool {
-	return (*[2]uintptr)(unsafe.Pointer(&i))[1] == 0
 }
