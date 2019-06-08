@@ -8,6 +8,10 @@ import (
 
 type Cpu Config
 
+type cpuPayload struct {
+	UsagePercent float64 `json:"usage_percent"`
+}
+
 func (c *Cpu) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -15,8 +19,9 @@ func (c *Cpu) Collect(datasource *Datasource) *dto.Stat {
 	if err != nil {
 		log.Error(err)
 	}
+	p := []cpuPayload{{UsagePercent: value[0]}}
 
-	return dto.NewStat(datasource.DsDto, "cpu", value[0])
+	return dto.NewStat(datasource.DsDto, "cpu", p)
 }
 
 func (c *Cpu) Conf() Config {

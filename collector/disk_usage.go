@@ -16,13 +16,13 @@ func (d *DiskUsage) Collect(datasource *Datasource) *dto.Stat {
 		log.Error(err)
 	}
 
-	allStats := make(map[string]disk.UsageStat)
+	var allStats []disk.UsageStat
 	for _, p := range partitions {
 		stats, err := disk.Usage(p.Mountpoint)
 		if err != nil {
 			log.Error(err)
 		}
-		allStats[p.Mountpoint] = *stats
+		allStats = append(allStats, *stats)
 	}
 
 	return dto.NewStat(datasource.DsDto, "disk_usage", allStats)

@@ -19,8 +19,9 @@ func (l *Load) Collect(datasource *Datasource) *dto.Stat {
 			log.Error("This stat is supported only in linux")
 		}
 	}
+	allStats := []load.AvgStat{*stats}
 
-	return dto.NewStat(datasource.DsDto, "load", stats)
+	return dto.NewStat(datasource.DsDto, "load", allStats)
 }
 
 func (l *Load) Conf() Config {

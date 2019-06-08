@@ -15,8 +15,9 @@ func (m *VirtMem) Collect(datasource *Datasource) *dto.Stat {
 	if err != nil {
 		log.Error(err)
 	}
+	allStats := []mem.VirtualMemoryStat{*stats}
 
-	return dto.NewStat(datasource.DsDto, "virt_mem", stats)
+	return dto.NewStat(datasource.DsDto, "virt_mem", allStats)
 }
 
 func (m *VirtMem) Conf() Config {
