@@ -2,8 +2,6 @@
 
 package config
 
-// TODO: fix these templates when done
-
 var defaultCollectorConfig = `/*
 ------------------------------------
 statsender - collector configuration
@@ -19,7 +17,7 @@ name_of_collector {   // Name of a collector
 There are two ways to disable the collector:
 1. set 'enabled' to 'false'
 2. comment or delete the whole block
-Using the second approch, you won't be able to manage
+Using the second approach, you won't be able to manage
 this collector using CLI anymore, though.
 
 */
@@ -37,11 +35,7 @@ system {
     cron = "*/5 * * * * *"
     enabled = true
   }
-  disk_io {
-    cron = "*/5 * * * * *"
-    enabled = true
-  }
-  disk_usage {
+  disk {
     cron = "*/5 * * * * *"
     enabled = true
   }
@@ -57,7 +51,27 @@ system {
 }
 
 postgres {
+  pg_stat_statements {
+    cron = "@hourly"
+    enabled = true
+  }
+  pg_stat_activity {
+    cron = "@hourly"
+    enabled = true
+  }
+  pg_stat_user_tables {
+    cron = "@hourly"
+    enabled = true
+  }
   pg_stat_user_indexes {
+    cron = "@hourly"
+    enabled = true
+  }
+  pg_locks {
+    cron = "@hourly"
+    enabled = true
+  }
+  pg_stat_archiver {
     cron = "@hourly"
     enabled = true
   }
