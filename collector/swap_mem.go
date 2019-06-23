@@ -15,9 +15,9 @@ func (m *SwapMem) Collect(datasource *Datasource) *dto.Stat {
 	if err != nil {
 		log.Error(err)
 	}
-	allStats := []mem.SwapMemoryStat{*stats}
+	payload := []memPayload{{stats.Total, stats.Free}}
 
-	return dto.NewStat(datasource.DsDto, "swap_mem", allStats)
+	return dto.NewStat(datasource.DsDto, "swap_mem", payload)
 }
 
 func (m *SwapMem) Conf() Config {

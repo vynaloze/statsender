@@ -14,8 +14,7 @@ func (s *System) ToInterface() []collector.Collector {
 		s.Cpu,
 		s.VirtMem,
 		s.SwapMem,
-		s.DiskIo,
-		s.DiskUsage,
+		s.Disk,
 		s.Net,
 		s.Load,
 	}

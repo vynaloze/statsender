@@ -27,13 +27,12 @@ type Datasource struct {
 }
 
 type System struct {
-	Cpu       *collector.Cpu       `hcl:"cpu,block"`
-	VirtMem   *collector.VirtMem   `hcl:"virtual_memory,block"`
-	SwapMem   *collector.SwapMem   `hcl:"swap_memory,block"`
-	DiskIo    *collector.DiskIo    `hcl:"disk_io,block"`
-	DiskUsage *collector.DiskUsage `hcl:"disk_usage,block"`
-	Net       *collector.Net       `hcl:"network,block"`
-	Load      *collector.Load      `hcl:"load,block"`
+	Cpu     *collector.Cpu     `hcl:"cpu,block"`
+	VirtMem *collector.VirtMem `hcl:"virtual_memory,block"`
+	SwapMem *collector.SwapMem `hcl:"swap_memory,block"`
+	Disk    *collector.Disk    `hcl:"disk,block"`
+	Net     *collector.Net     `hcl:"network,block"`
+	Load    *collector.Load    `hcl:"load,block"`
 }
 
 type Postgres struct {
