@@ -52,7 +52,7 @@ func startCrons(datasources []collector.Datasource, systemCollectors []collector
 			continue
 		}
 		log.Debugf("scheduling collector %+v", c)
-		err := crontab.AddFunc(c.Conf().Cron, newJob(collector.Datasource{DsDto: dto.NewSystemDsDto(), Conn: nil}, c, targets))
+		err := crontab.AddFunc(c.Conf().Cron, newJob(collector.Datasource{DsDto: dto.NewSystemDsDto(), PgStats: nil, ConnectionString: nil}, c, targets))
 		if err != nil {
 			log.Fatalf("Startup error - cron parse failed: %s", err)
 		}

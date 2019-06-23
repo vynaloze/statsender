@@ -24,7 +24,7 @@ type pgStatActivityPayload struct {
 func (p *PgStatActivity) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
-	s, err := datasource.Conn.PgStatActivity()
+	s, err := datasource.PgStats.PgStatActivity()
 	if err != nil {
 		log.Error(err)
 	}

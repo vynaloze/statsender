@@ -16,6 +16,7 @@ type Config struct {
 }
 
 type Datasource struct {
-	DsDto *dto.Datasource
-	Conn  *pgstats.PgStats
+	DsDto            *dto.Datasource
+	PgStats          *pgstats.PgStats
+	ConnectionString *string
 }

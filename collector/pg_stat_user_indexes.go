@@ -10,7 +10,7 @@ type PgStatUserIndexes Config
 func (p *PgStatUserIndexes) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
-	s, err := datasource.Conn.PgStatUserIndexes()
+	s, err := datasource.PgStats.PgStatUserIndexes()
 	if err != nil {
 		log.Error(err)
 	}

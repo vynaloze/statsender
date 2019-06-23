@@ -32,7 +32,7 @@ func connectToDatasources(c *config.Config) ([]collector.Datasource, datasourceE
 		if err != nil {
 			errs = append(errs, datasourceError{err: err, ds: ds})
 		} else {
-			datasources = append(datasources, collector.Datasource{DsDto: d, Conn: s})
+			datasources = append(datasources, collector.Datasource{DsDto: d, PgStats: s, ConnectionString: prepareConnectionString(ds)})
 		}
 	}
 	return datasources, errs
@@ -53,6 +53,24 @@ func optionalParams(ds config.Datasource) []pgstats.Option {
 		o = append(o, pgstats.SslKey(*ds.SslKey))
 	}
 	return o
+}
+
+func prepareConnectionString(ds config.Datasource) *string {
+	baseString := fmt.Sprintf("dbname=%s user=%s password=%s host=%s port=%d",
+		ds.DbName, ds.Username, ds.Password, ds.Host, ds.Port)
+	if ds.SslMode != nil {
+		baseString += " sslmode=" + *ds.SslMode
+	}
+	if ds.SslCert != nil {
+		baseString += " sslcert=" + *ds.SslCert
+	}
+	if ds.SslRootCert != nil {
+		baseString += " sslrootcert=" + *ds.SslRootCert
+	}
+	if ds.SslKey != nil {
+		baseString += " sslkey=" + *ds.SslKey
+	}
+	return &baseString
 }
 
 func printError(msg string) {

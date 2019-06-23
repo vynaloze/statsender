@@ -2,6 +2,8 @@
 
 package config
 
+// TODO: fix these templates when done
+
 var defaultCollectorConfig = `/*
 ------------------------------------
 statsender - collector configuration
