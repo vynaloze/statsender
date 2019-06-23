@@ -37,7 +37,8 @@ type System struct {
 }
 
 type Postgres struct {
+	PgStatStatements  *collector.PgStatStatements  `hcl:"pg_stat_statements,block"`
+	PgStatUserTables  *collector.PgStatUserTables  `hcl:"pg_stat_user_tables,block"`
 	PgStatUserIndexes *collector.PgStatUserIndexes `hcl:"pg_stat_user_indexes,block"`
 	PgStatActivity    *collector.PgStatActivity    `hcl:"pg_stat_activity,block"`
-	PgStatStatements  *collector.PgStatStatements  `hcl:"pg_stat_statements,block"`
 }
