@@ -258,6 +258,7 @@
     "github.com/hashicorp/hcl2/hcl",
     "github.com/hashicorp/hcl2/hclparse",
     "github.com/hashicorp/hcl2/hclwrite",
+    "github.com/lib/pq",
     "github.com/pkg/errors",
     "github.com/robfig/cron",
     "github.com/shirou/gopsutil/cpu",
@@ -267,6 +268,7 @@
     "github.com/shirou/gopsutil/net",
     "github.com/spf13/cobra",
     "github.com/vynaloze/pgstats",
+    "github.com/vynaloze/pgstats/nullable",
     "go.uber.org/zap",
   ]
   solver-name = "gps-cdcl"

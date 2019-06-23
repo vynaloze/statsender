@@ -40,4 +40,5 @@ type Postgres struct {
 	PgStatUserTables  *collector.PgStatUserTables  `hcl:"pg_stat_user_tables,block"`
 	PgStatUserIndexes *collector.PgStatUserIndexes `hcl:"pg_stat_user_indexes,block"`
 	PgStatActivity    *collector.PgStatActivity    `hcl:"pg_stat_activity,block"`
+	PgLocks           *collector.PgLocks           `hcl:"pg_locks,block"`
 }
