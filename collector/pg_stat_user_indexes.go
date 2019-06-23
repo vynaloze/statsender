@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// PgStatUserIndexes collects statistics about user-defined indexes
 type PgStatUserIndexes Config
 
 type pgStatUserIndexesPayload struct {
@@ -16,6 +17,7 @@ type pgStatUserIndexesPayload struct {
 	IdxTupFetch nullable.Int64 `json:"idx_tup_fetch"`
 }
 
+// Collect collects statistics from given datasource
 func (p *PgStatUserIndexes) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -37,6 +39,7 @@ func (p *PgStatUserIndexes) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "pg_stat_user_indexes", payload)
 }
 
+// Conf return the configuration of the collector
 func (p *PgStatUserIndexes) Conf() Config {
 	return Config(*p)
 }

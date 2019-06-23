@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// PgStatActivity collects statistics about current server process activity
 type PgStatActivity Config
 
 type pgStatActivityPayload struct {
@@ -21,6 +22,7 @@ type pgStatActivityPayload struct {
 	Query           nullable.String `json:"query"`
 }
 
+// Collect collects statistics from given datasource
 func (p *PgStatActivity) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -47,6 +49,7 @@ func (p *PgStatActivity) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "pg_stat_activity", payload)
 }
 
+// Conf return the configuration of the collector
 func (p *PgStatActivity) Conf() Config {
 	return Config(*p)
 }

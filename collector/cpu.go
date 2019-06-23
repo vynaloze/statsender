@@ -6,12 +6,14 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// Cpu collects statistics about CPU usage
 type Cpu Config
 
 type cpuPayload struct {
 	UsagePercent float64 `json:"usage_percent"`
 }
 
+// Collect collects statistics from given datasource
 func (c *Cpu) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -24,6 +26,7 @@ func (c *Cpu) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "cpu", p)
 }
 
+// Conf return the configuration of the collector
 func (c *Cpu) Conf() Config {
 	return Config(*c)
 }

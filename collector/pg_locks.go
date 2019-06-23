@@ -9,6 +9,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// PgLocks collects statistics about locks
 type PgLocks Config
 
 type pgLocksPayload struct {
@@ -35,6 +36,7 @@ type locksInfo struct {
 	BlockingQuery       nullable.String `json:"blocking_query"`
 }
 
+// Collect collects statistics from given datasource
 func (p *PgLocks) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -58,6 +60,7 @@ func (p *PgLocks) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "pg_locks", []pgLocksPayload{payload})
 }
 
+// Conf return the configuration of the collector
 func (p *PgLocks) Conf() Config {
 	return Config(*p)
 }

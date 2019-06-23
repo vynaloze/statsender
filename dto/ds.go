@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Datasource represents a single data source from which a stat was gathered
 type Datasource struct {
 	Ip       string            `json:"ip"`
 	Hostname *string           `json:"hostname"`
@@ -14,6 +15,7 @@ type Datasource struct {
 	Tags     map[string]string `json:"tags"`
 }
 
+// NewSystemDsDto creates a new dto.Datasource from a System datasource
 func NewSystemDsDto() *Datasource {
 	ds := Datasource{}
 	ds.Ip = getOutboundIP()
@@ -21,6 +23,7 @@ func NewSystemDsDto() *Datasource {
 	return &ds
 }
 
+// NewPostgresDsDto creates a new dto.Datasource from a Postgres datasource
 func NewPostgresDsDto(host string, port int, dbname string, tags map[string]string) *Datasource {
 	ds := Datasource{}
 	if host == "localhost" || host == "127.0.0.1" {

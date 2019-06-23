@@ -9,6 +9,7 @@ import (
 	"strings"
 )
 
+// ToInterface returns a slice of interfaces, casting all System collectors to interface
 func (s *System) ToInterface() []collector.Collector {
 	return []collector.Collector{
 		s.Cpu,
@@ -20,6 +21,7 @@ func (s *System) ToInterface() []collector.Collector {
 	}
 }
 
+// ToInterface returns a slice of interfaces, casting all Postgres collectors to interface
 func (p *Postgres) ToInterface() []collector.Collector {
 	return []collector.Collector{
 		p.PgStatStatements,
@@ -31,6 +33,7 @@ func (p *Postgres) ToInterface() []collector.Collector {
 	}
 }
 
+// SendersToInterface returns a slice of interfaces, casting all senders to interface
 func (c *Config) SendersToInterface() []sender.Sender {
 	var s []sender.Sender
 	if c.Sout != nil {
@@ -42,6 +45,7 @@ func (c *Config) SendersToInterface() []sender.Sender {
 	return s
 }
 
+// ParseDSN parses DSN string into Datasource
 func ParseDSN(dsn string, tags []string) (*Datasource, error) {
 	if !strings.HasPrefix(dsn, "postgresql://") {
 		dsn = strings.Join([]string{"postgresql://", dsn}, "")
@@ -113,6 +117,7 @@ func parseTags(tags []string) (map[string]string, error) {
 	return m, nil
 }
 
+// ParseSender parses CLI arguments into Sender
 func ParseSender(args []string) (*sender.Sender, error) {
 	typ := args[0]
 	switch typ {

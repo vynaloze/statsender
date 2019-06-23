@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// VirtMem collects statistics about virtual memory usage
 type VirtMem Config
 
 type memPayload struct {
@@ -13,6 +14,7 @@ type memPayload struct {
 	Available uint64 `json:"available"`
 }
 
+// Collect collects statistics from given datasource
 func (m *VirtMem) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -25,6 +27,7 @@ func (m *VirtMem) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "virt_mem", payload)
 }
 
+// Conf return the configuration of the collector
 func (m *VirtMem) Conf() Config {
 	return Config(*m)
 }

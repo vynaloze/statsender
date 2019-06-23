@@ -11,6 +11,7 @@ import (
 	"os"
 )
 
+// Run starts the main flow of the application and waits infinitely
 func Run(confDir string) {
 	// Prepare logger
 	var logErr error

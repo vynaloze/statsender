@@ -9,6 +9,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// PgStatStatements collects execution statistics of all SQL statements executed by a server
 type PgStatStatements Config
 
 type pgStatStatementsPayload struct {
@@ -25,6 +26,7 @@ type pgStatStatementsPayload struct {
 	LocalBlksRead  int64           `json:"local_blks_read"`
 }
 
+// Collect collects statistics from given datasource
 func (p *PgStatStatements) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -60,6 +62,7 @@ func (p *PgStatStatements) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "pg_stat_statements", payload)
 }
 
+// Conf return the configuration of the collector
 func (p *PgStatStatements) Conf() Config {
 	return Config(*p)
 }

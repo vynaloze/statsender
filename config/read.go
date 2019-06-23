@@ -10,12 +10,15 @@ import (
 	"path/filepath"
 )
 
+// ConfigError represents all parsing errors, which occurred while reading the configuration file
 type ConfigError struct {
 	err   error
 	diags hcl.Diagnostics
 	files map[string]*hcl.File
 }
 
+// ReadConfig finds, parses and merges all .hcl and .json files in a given directory,
+// then it decodes the data into Config struct or returns ConfigError
 func ReadConfig(dir string) (*Config, *ConfigError) {
 	// Find, parse, merge and decode all files
 	parser := hclparse.NewParser()
@@ -53,6 +56,7 @@ func ReadConfig(dir string) (*Config, *ConfigError) {
 	return &c, nil
 }
 
+// Print pretty-prints all the parsing errors
 func (ce ConfigError) Print() error {
 	if ce.err != nil {
 		redBold := color.New(color.FgRed).Add(color.Bold)

@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// Disk collects statistics about disk usage and disk I/O
 type Disk Config
 
 type diskPayload struct {
@@ -17,6 +18,7 @@ type diskPayload struct {
 	BytesWrite     uint64 `json:"bytes_write"`
 }
 
+// Collect collects statistics from given datasource
 func (d *Disk) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -49,6 +51,7 @@ func (d *Disk) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "disk", []diskPayload{payload})
 }
 
+// Conf return the configuration of the collector
 func (d *Disk) Conf() Config {
 	return Config(*d)
 }

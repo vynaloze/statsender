@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Http sender sends the gathered statistics to the defined remote endpoint
 type Http struct {
 	Target     string `hcl:"target"`
 	RetryDelay int    `hcl:"retryDelay"`
@@ -17,6 +18,8 @@ type Http struct {
 	retries    int
 }
 
+// Send sends the dto.Stat in a JSON format to the defined remote endpoint.
+// In case of failure, it will be retired with a delay
 func (h Http) Send(payload *dto.Stat) {
 	log, _ := logger.New()
 
@@ -49,6 +52,7 @@ func (h Http) Send(payload *dto.Stat) {
 
 }
 
+// Test tests the if the connection to the defined remote endpoint can be established
 func (h Http) Test() error {
 	_, err := http.Post(h.Target, "application/json", nil)
 	return err

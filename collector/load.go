@@ -7,8 +7,10 @@ import (
 	"runtime"
 )
 
+// Load collects statistics about CPU load (linux only)
 type Load Config
 
+// Collect collects statistics from given datasource
 func (l *Load) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -24,6 +26,7 @@ func (l *Load) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "load", allStats)
 }
 
+// Conf return the configuration of the collector
 func (l *Load) Conf() Config {
 	return Config(*l)
 }

@@ -1,3 +1,4 @@
+// Package cmd provides CLI
 package cmd
 
 import (
@@ -24,6 +25,7 @@ func init() {
 	addGeneral()
 }
 
+// Execute starts the application
 func Execute() {
 	if err := rootCmd.Execute(); err != nil {
 		fmt.Println(err)

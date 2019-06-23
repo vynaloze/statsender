@@ -28,6 +28,7 @@ func writeToFile(path string, content []byte, flags int) error {
 	return nil
 }
 
+// AddDatasource writes a new datasource to a given file in a given directory
 func AddDatasource(configDir string, filename string, datasource Datasource) error {
 	log, _ := logger.New()
 	path := filepath.Join(configDir, filename)
@@ -48,6 +49,7 @@ func AddDatasource(configDir string, filename string, datasource Datasource) err
 	return writeToFile(path, f.Bytes(), os.O_APPEND|os.O_CREATE|os.O_WRONLY)
 }
 
+// AddSender writes a new sender to a given file in a given directory
 func AddSender(configDir string, filename string, s sender.Sender) error {
 	log, _ := logger.New()
 	path := filepath.Join(configDir, filename)
@@ -84,12 +86,16 @@ type collectorConfig struct {
 	Postgres *Postgres `hcl:"postgres,block"`
 }
 
+// SetCollectorEnabled enables/disables a collector of a given type,
+// which is defined in a given file in a given directory
 func SetCollectorEnabled(configDir string, filename string, typ string, enabled bool) error {
 	return replaceInFile(configDir, filename, typ, func(field *reflect.Value) {
 		field.FieldByName("Enabled").SetBool(enabled)
 	})
 }
 
+// SetCollectorCron sets a new cron expression of a collector of a given type,
+// which is defined in a given file in a given directory
 func SetCollectorCron(configDir string, filename string, typ string, cron string) error {
 	return replaceInFile(configDir, filename, typ, func(field *reflect.Value) {
 		field.FieldByName("Cron").SetString(cron)
@@ -169,6 +175,8 @@ func setValue(c collectorConfig, typ string, setValFunc func(field *reflect.Valu
 	return c, errors.New("collector " + typ + " not found in config")
 }
 
+// InitConfig initializes a new, default configuration.
+// It creates three files: _collectors.hcl, _datasources.hcl and _senders.hcl in a given directory
 func InitConfig(configDir string) error {
 	log, _ := logger.New()
 	// create dir if not exists

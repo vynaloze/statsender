@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// PgStatArchiver collects statistics about WAL archiver process's activity
 type PgStatArchiver Config
 
 type pgStatArchiverPayload struct {
@@ -15,6 +16,7 @@ type pgStatArchiverPayload struct {
 	LastFailedTime   nullable.Time  `json:"last_failed_time"`
 }
 
+// Collect collects statistics from given datasource
 func (p *PgStatArchiver) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -32,6 +34,7 @@ func (p *PgStatArchiver) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "pg_stat_archiver", []pgStatArchiverPayload{payload})
 }
 
+// Conf return the configuration of the collector
 func (p *PgStatArchiver) Conf() Config {
 	return Config(*p)
 }

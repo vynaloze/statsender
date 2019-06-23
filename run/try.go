@@ -10,6 +10,7 @@ import (
 	"time"
 )
 
+// Try dry-runs the application, allowing to verify the provided configuration
 func Try(confDir string) {
 	ok := true
 	fmt.Println("[INFO] reading configuration...")

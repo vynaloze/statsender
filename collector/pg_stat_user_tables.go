@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// PgStatUserTables collects statistics about user-defined tables
 type PgStatUserTables Config
 
 type pgStatUserTablesPayload struct {
@@ -29,6 +30,7 @@ type pgStatUserTablesPayload struct {
 	AutoanalyzeCount nullable.Int64 `json:"autoanalyze_count"`
 }
 
+// Collect collects statistics from given datasource
 func (p *PgStatUserTables) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -63,6 +65,7 @@ func (p *PgStatUserTables) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "pg_stat_user_tables", payload)
 }
 
+// Conf return the configuration of the collector
 func (p *PgStatUserTables) Conf() Config {
 	return Config(*p)
 }

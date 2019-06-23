@@ -1,3 +1,4 @@
+// Package run handles two modes (test and actual) of running the application
 package run
 
 import (

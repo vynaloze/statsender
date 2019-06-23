@@ -6,6 +6,7 @@ import (
 	"github.com/vynaloze/statsender/logger"
 )
 
+// Net collects statistics about network I/O
 type Net Config
 
 type netPayload struct {
@@ -13,6 +14,7 @@ type netPayload struct {
 	BytesOut uint64 `json:"bytes_out"`
 }
 
+// Collect collects statistics from given datasource
 func (n *Net) Collect(datasource *Datasource) *dto.Stat {
 	log, _ := logger.New()
 
@@ -25,6 +27,7 @@ func (n *Net) Collect(datasource *Datasource) *dto.Stat {
 	return dto.NewStat(datasource.DsDto, "net", payload)
 }
 
+// Conf return the configuration of the collector
 func (n *Net) Conf() Config {
 	return Config(*n)
 }
