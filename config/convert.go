@@ -27,6 +27,7 @@ func (p *Postgres) ToInterface() []collector.Collector {
 		p.PgStatUserIndexes,
 		p.PgStatActivity,
 		p.PgLocks,
+		p.PgStatArchiver,
 	}
 }
 
