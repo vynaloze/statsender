@@ -87,53 +87,62 @@ func TestFailParseDSN(t *testing.T) {
 var parseSenderCorrectTestTable = []struct {
 	typ      string
 	spec     string
+	flags    []string
 	expected sender.Sender
 }{
 	{
 		"console",
 		"",
+		[]string{},
 		sender.Sout{},
 	},
 	{
 		"console",
 		"should be ignored",
+		[]string{},
 		sender.Sout{},
 	},
 	{
 		"http",
 		"http://10.0.1.2:8080/stats",
+		[]string{"3", "7"},
 		sender.Http{Target: "http://10.0.1.2:8080/stats", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
 		"http://localhost:8080/stats",
+		[]string{"3", "7"},
 		sender.Http{Target: "http://localhost:8080/stats", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
 		"http://10.0.1.2:8080/stats/v2",
+		[]string{"3", "7"},
 		sender.Http{Target: "http://10.0.1.2:8080/stats/v2", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
 		"http://10.0.1.2/stats",
+		[]string{"3", "7"},
 		sender.Http{Target: "http://10.0.1.2/stats", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
 		"http://10.0.1.2:8080",
+		[]string{"3", "7"},
 		sender.Http{Target: "http://10.0.1.2:8080", MaxRetries: 3, RetryDelay: 7},
 	},
 	{
 		"http",
 		"http://10.0.1.2",
+		[]string{"3", "7"},
 		sender.Http{Target: "http://10.0.1.2", MaxRetries: 3, RetryDelay: 7},
 	},
 }
 
 func TestParseSender(t *testing.T) {
 	for i, tt := range parseSenderCorrectTestTable {
-		actual, err := ParseSender([]string{tt.typ, tt.spec})
+		actual, err := ParseSender(append([]string{tt.typ, tt.spec}, tt.flags...))
 		if err != nil {
 			t.Error(err)
 		}
