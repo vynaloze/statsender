@@ -24,28 +24,28 @@ this collector using CLI anymore, though.
 
 system {
   cpu {
-    cron = "*/5 * * * * *"
+    cron = "0 */5 * * * *"
     enabled = true
   }
   virtual_memory {
-    cron = "*/5 * * * * *"
+    cron = "0 */5 * * * *"
     enabled = true
   }
   swap_memory {
-    cron = "*/5 * * * * *"
+    cron = "0 */5 * * * *"
     enabled = true
   }
   disk {
-    cron = "*/5 * * * * *"
+    cron = "0 */5 * * * *"
     enabled = true
   }
   network {
-    cron = "*/5 * * * * *"
+    cron = "0 */5 * * * *"
     enabled = true
   }
   // unsupported on Windows
   load {
-    cron = "*/5 * * * * *"
+    cron = "0 */5 * * * *"
     enabled = true
   }
 }
