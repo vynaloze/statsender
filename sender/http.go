@@ -36,7 +36,7 @@ func (h Http) Send(payload *dto.Stat) {
 	var failure string
 	if err != nil {
 		failure = err.Error()
-	} else if response.StatusCode != 200 {
+	} else if response.StatusCode < 200 || response.StatusCode > 299 {
 		failure = fmt.Sprint(response)
 	}
 
@@ -45,7 +45,7 @@ func (h Http) Send(payload *dto.Stat) {
 			log.Errorf("Failed to forward payload %d times. Abort mission, I repeat ABORT MISSION!", h.retries)
 			log.Error(err)
 		} else {
-			log.Warnf("Failed to forward payload (%d try). Will try again in %d seconds.\nError: %s", h.retries+1, h.RetryDelay, err)
+			log.Warnf("Failed to forward payload (%d try). Will try again in %d seconds.\nError: %v", h.retries+1, h.RetryDelay, err)
 			h.forwardWithDelay(payload)
 		}
 	}
