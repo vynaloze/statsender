@@ -2,19 +2,23 @@ package sender
 
 import (
 	"bytes"
+	"crypto/tls"
+	"crypto/x509"
 	"encoding/json"
 	"fmt"
 	"github.com/vynaloze/statsender/dto"
 	"github.com/vynaloze/statsender/logger"
+	"io/ioutil"
 	"net/http"
 	"time"
 )
 
 // Http sender sends the gathered statistics to the defined remote endpoint
 type Http struct {
-	Target     string `hcl:"target"`
-	RetryDelay int    `hcl:"retryDelay"`
-	MaxRetries int    `hcl:"maxRetries"`
+	Target     string    `hcl:"target"`
+	RetryDelay int       `hcl:"retryDelay"`
+	MaxRetries int       `hcl:"maxRetries"`
+	RootCAs    *[]string `hcl:"rootCAs"`
 	retries    int
 }
 
@@ -30,7 +34,7 @@ func (h Http) Send(payload *dto.Stat) {
 	data := string(p)
 	log.Debugf("Target:%s; Data: %s", h.Target, data)
 
-	response, err := http.Post(h.Target, "application/json", bytes.NewBuffer(p))
+	response, err := h.client().Post(h.Target, "application/json", bytes.NewBuffer(p))
 	log.Debug("Response: %s", response)
 
 	var failure string
@@ -54,8 +58,32 @@ func (h Http) Send(payload *dto.Stat) {
 
 // Test tests the if the connection to the defined remote endpoint can be established
 func (h Http) Test() error {
-	_, err := http.Post(h.Target, "application/json", nil)
+	_, err := h.client().Post(h.Target, "application/json", nil)
 	return err
+}
+
+func (h Http) client() *http.Client {
+	log, _ := logger.New()
+	caCertPool := x509.NewCertPool()
+
+	if h.RootCAs != nil {
+		for _, certFile := range *h.RootCAs {
+			log.Debugf("Reading certificate from %s", certFile)
+			cert, err := ioutil.ReadFile(certFile)
+			if err != nil {
+				log.Fatal("Error reading certificate: ", err)
+			}
+			caCertPool.AppendCertsFromPEM(cert)
+		}
+	}
+
+	return &http.Client{
+		Transport: &http.Transport{
+			TLSClientConfig: &tls.Config{
+				RootCAs: caCertPool,
+			},
+		},
+	}
 }
 
 func (h Http) forwardWithDelay(payload *dto.Stat) {

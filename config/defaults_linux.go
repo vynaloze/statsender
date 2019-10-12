@@ -137,9 +137,10 @@ var defaultSenderConfig = `//
 //
 // Http sender - used to send statistics to remote http locations
 // http {
-//   target = "http://10.0.1.3:8080/stats"
+//   target = "https://10.0.1.3:8443/stats"
 //   retryDelay = 7
 //   maxRetries = 2
+//   rootCAs = ["/path/to/your/rootCA.pem", "and/optionally/another/ones"]
 // }
 //
 `
